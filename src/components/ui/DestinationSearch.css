@@ -1,0 +1,104 @@
+.destination-search {
+  position: relative;
+  width: 100%;
+}
+
+.destination-search-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.destination-search-icon {
+  position: absolute;
+  inset-inline-start: var(--space-4);
+  color: var(--color-text-faint);
+  pointer-events: none;
+}
+
+.destination-search-input {
+  width: 100%;
+  padding: var(--space-4) var(--space-10);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  font-size: var(--text-base);
+}
+
+.destination-search-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.destination-search-clear {
+  position: absolute;
+  inset-inline-end: var(--space-3);
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  display: inline-flex;
+  padding: var(--space-1);
+}
+
+.destination-search-results {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + var(--space-2));
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--space-2);
+  list-style: none;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+}
+
+.destination-search-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-3);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  text-align: start;
+  font-size: var(--text-base);
+}
+
+.destination-search-option:hover {
+  background: var(--color-surface-alt);
+}
+
+.destination-search-flag {
+  font-size: 1.25rem;
+}
+
+.destination-search-empty {
+  padding: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.destination-search-icon-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  font-size: 1.25rem;
+  color: var(--color-text-muted);
+}
+
+.destination-search-badge {
+  margin-inline-start: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+}

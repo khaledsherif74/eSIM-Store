@@ -1,0 +1,111 @@
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 420px;
+}
+
+.checkout-form-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.checkout-form-plan-title {
+  font-weight: 600;
+}
+
+.checkout-form-plan-price {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+}
+
+.checkout-form-plan-price small {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.checkout-form-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
+
+.checkout-form-label input {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  font-weight: 400;
+}
+
+.checkout-form-label input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.checkout-form-error {
+  color: var(--color-danger);
+  font-size: var(--text-sm);
+}
+
+.checkout-form-note {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  text-align: center;
+}
+
+.checkout-form-account-note {
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.checkout-form-payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.checkout-payment-option {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.checkout-payment-option.selected {
+  border-color: var(--color-primary);
+}
+
+.checkout-payment-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.checkout-payment-balance {
+  font-weight: 400;
+  color: var(--color-text-muted);
+}
+
+.checkout-form-wallet-note {
+  font-size: var(--text-xs);
+  color: var(--color-danger);
+}

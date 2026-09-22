@@ -1,0 +1,8 @@
+.order-lookup-card{display:grid;grid-template-columns:auto 1fr;gap:var(--space-3);align-items:start}
+.order-lookup-card>svg{color:var(--color-primary);margin-top:2px}
+.order-lookup-card h2{font-size:var(--text-lg)}
+.order-lookup-card p{color:var(--color-text-muted);font-size:var(--text-sm);margin-top:4px}
+.order-lookup-card form{grid-column:1/-1;display:flex;gap:var(--space-2);flex-wrap:wrap}
+.order-lookup-card input{flex:1;min-width:160px;padding:var(--space-3) var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-surface)}
+.order-lookup-card input:focus{outline:none;border-color:var(--color-primary)}
+@media(max-width:520px){.order-lookup-card form{flex-direction:column}.order-lookup-card form input,.order-lookup-card form button{width:100%}}

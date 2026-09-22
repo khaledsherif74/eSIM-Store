@@ -1,0 +1,135 @@
+.acct-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16, 21, 31, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: var(--space-4);
+}
+
+.acct-modal {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-6);
+}
+
+.acct-modal-close {
+  position: absolute;
+  top: var(--space-4);
+  inset-inline-end: var(--space-4);
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  cursor: pointer;
+}
+
+.acct-modal h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  margin: 0 0 4px;
+}
+
+.acct-modal-subtitle {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0 0 var(--space-5);
+}
+
+.acct-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.acct-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.acct-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.acct-input-wrap input,
+.acct-field > input {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.acct-input-wrap input {
+  padding-inline-end: 42px;
+}
+
+.acct-input-wrap input:focus,
+.acct-field > input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.acct-input-toggle {
+  position: absolute;
+  inset-inline-end: 4px;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  cursor: pointer;
+}
+
+.acct-input-toggle:hover {
+  color: var(--color-text);
+}
+
+.acct-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+.acct-error,
+.acct-success {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.acct-error {
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.acct-success {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+}
+
+.acct-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.acct-actions > * {
+  flex: 1;
+}

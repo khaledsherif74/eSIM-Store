@@ -1,0 +1,74 @@
+.my-esims-page {
+  padding: var(--space-8) 0 var(--space-16);
+}
+
+.my-esims-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.my-esims-header h1 {
+  margin: var(--space-1) 0;
+}
+
+.my-esims-header p {
+  color: var(--color-text-muted);
+  max-width: 520px;
+}
+
+.my-esims-loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-16) 0;
+}
+
+.my-esims-section-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.my-esims-section-head span {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  border-radius: var(--radius-pill);
+  padding: 2px 10px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.my-esims-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: 120px;
+}
+
+.my-esims-empty {
+  text-align: center;
+  padding: var(--space-16) var(--space-4);
+  color: var(--color-text-muted);
+}
+
+.my-esims-empty h2 {
+  margin: var(--space-4) 0 var(--space-2);
+  color: var(--color-text);
+}
+
+.my-esims-empty-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.my-esims-empty small {
+  display: block;
+  margin-top: var(--space-4);
+}

@@ -1,0 +1,15 @@
+.checkout-page {
+  padding: var(--space-10) 0 var(--space-16);
+  max-width: 480px;
+}
+
+.checkout-page h1 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-6);
+}
+
+.checkout-page-loading,
+.checkout-page-notfound {
+  padding: var(--space-16) 0;
+  text-align: center;
+}

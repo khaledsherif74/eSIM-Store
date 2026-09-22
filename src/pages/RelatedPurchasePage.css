@@ -1,0 +1,150 @@
+.related-page {
+  padding: var(--space-8) 0 var(--space-16);
+}
+
+.related-page header {
+  margin: var(--space-4) 0 var(--space-6);
+}
+
+.related-page header p {
+  color: var(--color-text-muted);
+  max-width: 560px;
+}
+
+.related-current {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.related-current-facts {
+  display: flex;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.related-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+}
+
+.related-products {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.related-product {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: start;
+  font: inherit;
+  transition: border-color var(--duration-fast) var(--ease);
+}
+
+.related-product.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.related-product small {
+  color: var(--color-text-muted);
+}
+
+.related-product > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.related-product svg {
+  opacity: 0;
+}
+
+.related-product.selected svg {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+.related-checkout-card form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.related-checkout-card label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.related-checkout-card input {
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+  color: var(--color-text);
+}
+
+.selected-summary {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-3);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+}
+
+.related-payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.related-checkout-card label.related-payment-option {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.related-payment-option.selected {
+  border-color: var(--color-primary);
+}
+
+.related-payment-option.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 860px) {
+  .related-layout {
+    grid-template-columns: 1fr;
+  }
+}
