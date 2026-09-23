@@ -33,24 +33,46 @@ async function searchProducts(params = {}) {
 async function getPopular(limit = 10) {
   return apiClient.get(`/api/products/popular?limit=${limit}`);
 }
+
+async function getAddonProducts(orderId, token) {
+  const query = token ? `?token=${encodeURIComponent(token)}` : "";
+
+  return apiClient.get(
+    `/api/products/addons/${encodeURIComponent(orderId)}${query}`,
+  );
+}
+
+async function getReplacementProducts(orderId, token) {
+  const query = token ? `?token=${encodeURIComponent(token)}` : "";
+
+  return apiClient.get(
+    `/api/products/replacements/${encodeURIComponent(orderId)}${query}`,
+  );
+}
+
 async function getProductNetworks(productId) {
   return apiClient.get(
     `/api/products/${encodeURIComponent(productId)}/networks`,
   );
 }
+
 async function getSyncStatus() {
   return apiClient.get("/api/sync/status");
 }
+
 async function checkPrice(productId) {
   return apiClient.post(
     `/api/products/${encodeURIComponent(productId)}/price-check`,
     {},
   );
 }
+
 export const productsApi = {
   getAllProducts,
   searchProducts,
   getPopular,
+  getAddonProducts,
+  getReplacementProducts,
   getProductNetworks,
   getSyncStatus,
   checkPrice,
