@@ -7,4 +7,13 @@ export const authApi = {
   getMe: () => apiClient.get("/api/auth/me"),
   updateProfile: (data) => apiClient.patch("/api/auth/me", data),
   changePassword: (data) => apiClient.patch("/api/auth/password", data),
+  forgotPassword: (email) =>
+    apiClient.post("/api/auth/forgot-password", {
+      email,
+    }),
+  resetPassword: (token, newPassword) =>
+    apiClient.post("/api/auth/reset-password", {
+      token,
+      newPassword,
+    }),
 };

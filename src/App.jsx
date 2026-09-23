@@ -17,6 +17,8 @@ import { AdminLoginPage } from "./pages/AdminLoginPage.jsx";
 import { AdminDashboardPage } from "./pages/AdminDashboardPage.jsx";
 import { AdminForgotPasswordPage } from "./pages/AdminForgotPasswordPage.jsx";
 import { AdminResetPasswordPage } from "./pages/AdminResetPasswordPage.jsx";
+import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage.jsx";
+import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage.jsx";
 import { RequireAdminSession } from "./components/RequireAdminSession.jsx";
 import { NotFoundPage } from "./pages/NotFoundPage.jsx";
 import { AuthPage } from "./pages/auth/AuthPage.jsx";
@@ -49,6 +51,11 @@ function AppShell() {
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route
+            path="/auth/forgot-password"
+            element={<ForgotPasswordPage />}
+          />
+          <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route
             path="/admin/forgot-password"

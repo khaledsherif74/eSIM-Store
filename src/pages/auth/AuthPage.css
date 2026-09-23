@@ -287,6 +287,19 @@
   margin-bottom: var(--space-3);
 }
 
+.auth-forgot-password {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 4px;
+}
+
+.auth-forgot-password a {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
 @media (max-width: 900px) {
   .auth-page-container {
     flex-direction: column;
