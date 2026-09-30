@@ -33,7 +33,8 @@
     "language": "English",
     "trust_note": "تُعرض تفاصيل الباقات كما وردت من مزود الخدمة.",
     "copyright": "متجر eSIM",
-    "sourced_note": "الباقات مصدرها كتالوج شركائنا."
+    "sourced_note": "الباقات مصدرها كتالوج شركائنا.",
+    "currency": "العملة"
   },
   "home": {
     "hero_title": "ابقَ متصلاً أينما كنت",
@@ -46,9 +47,9 @@
     "search_plan_placeholder": "الباقة أو المزوّد…",
     "filter_heading": "تصفية",
     "features_label": "المزايا",
-    "calls_included": "مكالمات ضمن الباقة",
-    "sms_included": "رسائل نصية ضمن الباقة",
-    "hotspot_included": "نقطة اتصال ضمن الباقة",
+    "calls_included": "مكالمات",
+    "sms_included": "رسائل نصية",
+    "hotspot_included": "نقطة اتصال",
     "package_type_label": "نوع الباقة",
     "package_all": "الكل",
     "package_local": "دولة واحدة",
@@ -63,7 +64,7 @@
     "plan_type_all": "كل الباقات",
     "plan_type_instant": "تفعيل فوري",
     "plan_type_verification": "يتطلب توثيق الهوية",
-    "price_label": "السعر",
+    "price_label": "السعر يصل إلى",
     "price_all": "أي سعر",
     "sort_heading": "الترتيب حسب",
     "sort_popular": "الأكثر شيوعًا",
@@ -75,7 +76,9 @@
     "clear_filters": "مسح عوامل التصفية",
     "no_results": "لا توجد باقات مطابقة. جرّب وجهة أخرى أو أعد ضبط عوامل التصفية.",
     "region_badge": "منطقة",
-    "no_destination_match": "لا توجد وجهات مطابقة لـ"
+    "no_destination_match": "لا توجد وجهات مطابقة لـ",
+    "results_count": "{{count}} باقة",
+    "currency_label": "العملة"
   },
   "auth": {
     "welcome": "مرحبًا بك في متجر eSIM",
@@ -134,7 +137,12 @@
     "hero_subtitle": "احصل على باقات eSIM بأسعار مناسبة لأكثر من 200 دولة ومنطقة. سريعة وآمنة وبلا تعقيد.",
     "hero_badge_countries": "+200 دولة ومنطقة",
     "hero_badge_instant": "تفعيل فوري",
-    "hero_badge_secure": "آمن وموثوق"
+    "hero_badge_secure": "آمن وموثوق",
+    "main_title": "ابقَ على اتصال في أي مكان في العالم.",
+    "main_text": "احصل على باقات eSIM بأسعار معقولة تغطي أكثر من 200 دولة ومنطقة. خدمة سريعة وآمنة وخالية من المتاعب.",
+    "f_badge": "أكثر من 200 دولة ومنطقة",
+    "s_badge": "تفعيل فوري",
+    "t_badge": "آمن وموثوق"
   },
   "profile": {
     "my_wallet": "محفظتي",
@@ -220,7 +228,8 @@
     "secure_payment": "دفع آمن · Paymob",
     "need_help_choosing": "بحاجة لمساعدة في الاختيار؟",
     "trip_helper_note": "استخدم ميزة تخطيط رحلتك لمقارنة التغطية عبر عدة دول تلقائيًا.",
-    "plan_your_trip": "خطط لرحلتك"
+    "plan_your_trip": "خطط لرحلتك",
+    "back": "رجوع"
   },
   "checkout": {
     "loading": "جارٍ تحميل الباقة…",

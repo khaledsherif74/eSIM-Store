@@ -2,7 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { SlidersHorizontal, X, Globe2, Search } from "lucide-react";
+import {
+  SlidersHorizontal,
+  X,
+  Globe2,
+  Search,
+  ChevronDown,
+} from "lucide-react";
 import { DestinationSearch } from "../components/ui/DestinationSearch.jsx";
 import { FilterPillGroup } from "../components/ui/FilterPillGroup.jsx";
 import { Pagination } from "../components/ui/Pagination.jsx";
@@ -17,6 +23,7 @@ import { useCountries } from "../hooks/useCountries.js";
 import { useProductSearch } from "../hooks/useProductSearch.js";
 import { useProducts } from "../hooks/useProducts.js";
 import { useCoverageAnalysis } from "../hooks/useCoverageAnalysis.js";
+import { useCurrency, DISPLAY_CURRENCIES } from "../i18n/CurrencyContext.jsx";
 import {
   addDestination,
   removeDestination,
@@ -28,6 +35,7 @@ import {
 import "./HomePage.css";
 import hero from "../public/images/hero.png";
 
+// UI sort id -> backend sortBy value (see productRepository.listActiveProducts).
 const SORT_TO_BACKEND = {
   popular: "popular",
   cheapest: "price_asc",
@@ -37,6 +45,8 @@ const SORT_TO_BACKEND = {
   newest: "newest",
 };
 
+// SORT_OPTIONS (from PlanFilters.jsx) carries hardcoded English labels —
+// this maps each option's id to its translation key instead.
 const SORT_LABEL_KEYS = {
   popular: "home.sort_popular",
   cheapest: "home.sort_cheapest",
@@ -48,21 +58,30 @@ const SORT_LABEL_KEYS = {
 
 const PAGE_SIZE = 20;
 
+/**
+ * The Home page — the single browsing hub for the store, whether or not
+ * the person is logged in. Combines what used to be three separate pages:
+ * the old marketing LandingPage, PlansPage's filter/sort/paginate grid, and
+ * PlanYourTripPage's multi-destination coverage search — a plan the person
+ * hasn't decided on yet shouldn't need three different pages to find.
+ */
 export function HomePage() {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const { countries } = useCountries();
   const {
     countries: masterCountries,
     regions: masterRegions,
     isLoading: destinationsLoading,
   } = useCountries();
+  const { countries } = useCountries();
   const destinations = useSelector(selectTripDestinations);
   const countryCodes = useSelector(selectTripCountryCodes);
   const regionIds = useSelector(selectTripRegionIds);
 
   const [params, setParams] = useSearchParams();
   const [sort, setSort] = useState("cheapest");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const { currency, setCurrency } = useCurrency();
   const query = params.get("q") || "";
   const type = params.get("type") || "all";
   const data = params.get("data") || "all";
@@ -133,6 +152,12 @@ export function HomePage() {
   );
   const { products, total, totalPages, isLoading, error } =
     useProductSearch(searchParams);
+
+  // "Plan Your Trip", folded in: when the person has picked 2+ individual
+  // countries (not regions — a region is too broad for a meaningful
+  // "uncovered country" gap analysis) and no single plan covers all of
+  // them, fall back to the same coverage-combo logic the old dedicated
+  // page used, instead of just showing an empty grid.
   const needsCoverageFallback =
     !isLoading &&
     total === 0 &&
@@ -265,8 +290,56 @@ export function HomePage() {
           onSelect={selectCountryFromSlider}
         />
 
+        <div className="home-toolbar">
+          <span className="home-results-count">
+            {t("home.results_count", { count: total })}
+          </span>
+          <div className="home-toolbar-controls">
+            <label className="home-toolbar-select">
+              <span className="visually-hidden">
+                {t("home.currency_label")}
+              </span>
+              <select
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+              >
+                {DISPLAY_CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.code}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} />
+            </label>
+
+            <button
+              type="button"
+              className={`home-toolbar-filters-btn${hasFilters ? " has-filters" : ""}`}
+              onClick={() => setFiltersOpen((o) => !o)}
+              aria-expanded={filtersOpen}
+            >
+              <SlidersHorizontal size={15} /> {t("home.filter_heading")}
+            </button>
+
+            <label className="home-toolbar-select">
+              <span className="visually-hidden">{t("home.sort_heading")}</span>
+              <select value={sort} onChange={(e) => setSort(e.target.value)}>
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>
+                    {t(SORT_LABEL_KEYS[opt.id] || opt.label)}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown size={14} />
+            </label>
+          </div>
+        </div>
+
         <div className="home-layout">
-          <aside className="home-sidebar">
+          {/* Sidebar: search + filters as compact selection controls.
+              Always visible on desktop; collapses behind the "Filters"
+              toolbar button above on mobile (see .home-sidebar.open). */}
+          <aside className={`home-sidebar${filtersOpen ? " open" : ""}`}>
             <div className="home-sidebar-section">
               <div className="home-sidebar-heading">
                 <Search size={15} /> {t("home.search_heading")}
@@ -311,10 +384,10 @@ export function HomePage() {
               <FilterPillGroup
                 label={t("home.package_type_label")}
                 value={packaging}
-                onChange={(v) => setFilter("packaging", v)}
+                onChange={(v) =>
+                  setFilter("packaging", v === packaging ? "all" : v)
+                }
                 options={[
-                  { value: "all", label: t("home.package_all") },
-                  { value: "local", label: t("home.package_local") },
                   { value: "regional", label: t("home.package_regional") },
                   { value: "global", label: t("home.package_global") },
                 ]}
@@ -342,15 +415,15 @@ export function HomePage() {
                   ...(hotspot === "included" ? ["hotspot"] : []),
                 ]}
                 onChange={(next) => {
-                  setFilter(
-                    "calls",
-                    next.includes("calls") ? "included" : "any",
-                  );
-                  setFilter("sms", next.includes("sms") ? "included" : "any");
-                  setFilter(
-                    "hotspot",
-                    next.includes("hotspot") ? "included" : "any",
-                  );
+                  const newParams = new URLSearchParams(params);
+                  const setOrClear = (key, active) => {
+                    if (active) newParams.set(key, "included");
+                    else newParams.delete(key);
+                  };
+                  setOrClear("calls", next.includes("calls"));
+                  setOrClear("sms", next.includes("sms"));
+                  setOrClear("hotspot", next.includes("hotspot"));
+                  setParams(newParams, { replace: true });
                 }}
                 options={[
                   { value: "calls", label: t("home.calls_included") },
@@ -369,18 +442,6 @@ export function HomePage() {
                   {t("home.clear_filters")}
                 </Button>
               )}
-            </div>
-
-            <div className="home-sidebar-section">
-              <FilterPillGroup
-                label={t("home.sort_heading")}
-                value={sort}
-                onChange={setSort}
-                options={SORT_OPTIONS.map((opt) => ({
-                  value: opt.id,
-                  label: t(SORT_LABEL_KEYS[opt.id] || opt.label),
-                }))}
-              />
             </div>
           </aside>
 

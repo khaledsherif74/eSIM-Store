@@ -33,7 +33,8 @@
     "language": "العربية",
     "trust_note": "Provider-supplied plan details are shown where available.",
     "copyright": "eSIM Store",
-    "sourced_note": "Travel plans sourced from our partner catalogue."
+    "sourced_note": "Travel plans sourced from our partner catalogue.",
+    "currency": "Currency"
   },
   "home": {
     "hero_title": "Stay Connected Everywhere",
@@ -46,9 +47,9 @@
     "search_plan_placeholder": "Plan or provider…",
     "filter_heading": "Filter",
     "features_label": "Features",
-    "calls_included": "Calls included",
-    "sms_included": "SMS included",
-    "hotspot_included": "Hotspot included",
+    "calls_included": "Calls",
+    "sms_included": "SMS",
+    "hotspot_included": "Hotspot",
     "package_type_label": "Package type",
     "package_all": "All",
     "package_local": "Single country",
@@ -63,7 +64,7 @@
     "plan_type_all": "All plans",
     "plan_type_instant": "Instant",
     "plan_type_verification": "ID verification",
-    "price_label": "Price",
+    "price_label": "Price up to",
     "price_all": "Any price",
     "sort_heading": "Sort by",
     "sort_popular": "Popular",
@@ -75,7 +76,9 @@
     "clear_filters": "Clear filters",
     "no_results": "No plans match these filters. Try another destination or reset the filters.",
     "region_badge": "Region",
-    "no_destination_match": "No destinations match"
+    "no_destination_match": "No destinations match",
+    "currency_label": "Currency",
+    "results_count": "{{count}} plans"
   },
   "auth": {
     "welcome": "Welcome to eSIM Store",
@@ -134,7 +137,12 @@
     "hero_subtitle": "Get affordable eSIM plans for 200+ countries and regions. Fast. Secure. Hassle-free.",
     "hero_badge_countries": "200+ Countries & Regions",
     "hero_badge_instant": "Instant Activation",
-    "hero_badge_secure": "Secure & Reliable"
+    "hero_badge_secure": "Secure & Reliable",
+    "main_title": "Stay Connected Anywhere in the World",
+    "main_text": "Get affordable eSIM plans for 200+ countries and regions. Fast. Secure. Hassle-free.",
+    "f_badge": "200+ Countries & Regions",
+    "s_badge": "Instant Activation",
+    "t_badge": "Secure & Reliable"
   },
   "profile": {
     "my_wallet": "My Wallet",
@@ -166,6 +174,10 @@
     "notifications": "Notifications",
     "notifications_desc": "Manage your notification preferences.",
     "coming_soon": "Coming soon",
+    "change_password_sub": "Enter your current password, then choose a new password.",
+    "personal_info": "Personal Information",
+    "personal_info_sub": "Update your name and email in your account.",
+    "email": "Email",
     "current_password": "Current password",
     "new_password": "New password",
     "confirm_password": "Confirm new password",
@@ -216,7 +228,8 @@
     "secure_payment": "Secure payment · Paymob",
     "need_help_choosing": "Need help choosing?",
     "trip_helper_note": "Use Plan Your Trip to compare coverage across several countries automatically.",
-    "plan_your_trip": "Plan your trip"
+    "plan_your_trip": "Plan your trip",
+    "back": "Back"
   },
   "checkout": {
     "loading": "Loading plan…",

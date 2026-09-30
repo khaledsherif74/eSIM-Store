@@ -2,6 +2,24 @@
   padding: var(--space-10) 0 var(--space-16);
 }
 
+.plan-details-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.plan-details-back:hover {
+  color: var(--color-text);
+}
+
 .plan-details-loading,
 .plan-details-notfound {
   padding: var(--space-16) 0;
@@ -147,6 +165,12 @@
   color: var(--color-text-muted);
 }
 
+.plan-details-price-approx {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
 .plan-details-purchase-note {
   font-size: var(--text-xs);
   color: var(--color-text-faint);
@@ -164,4 +188,99 @@
   }
 }
 
-.plan-detail-cap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.plan-detail-cap{display:flex;gap:10px;align-items:center;padding:14px;border:1px solid var(--color-border);border-radius:12px}.plan-detail-cap strong,.plan-detail-cap span{display:block}.plan-detail-cap span{font-size:12px;color:var(--color-text-muted);margin-top:3px}.plan-detail-cap.included{background:var(--color-success-soft);border-color:transparent;color:var(--color-success)}.plan-detail-cap.not-included{background:var(--color-surface-alt);border-color:transparent;color:var(--color-text-faint)}.plan-detail-help{font-size:12px;color:var(--color-text-faint);margin-top:10px}.plan-details-country-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}.plan-details-country-grid div{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--color-border);border-radius:10px}.plan-details-country-grid span{font-size:1.35rem}.plan-networks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.plan-networks div{padding:12px;border:1px solid var(--color-border);border-radius:10px}.plan-networks span,.purchase-facts span{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-muted);margin-top:4px}.plan-before-buy{display:grid;gap:10px}.plan-before-buy p{display:flex;gap:9px;align-items:flex-start;color:var(--color-text-muted)}.purchase-facts{display:grid;gap:6px;margin:16px 0;padding:12px;border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border)}@media(max-width:700px){.plan-detail-cap-grid,.plan-networks{grid-template-columns:1fr}}
+.plan-detail-cap-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.plan-detail-cap {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+.plan-detail-cap strong,
+.plan-detail-cap span {
+  display: block;
+}
+.plan-detail-cap span {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+.plan-detail-cap.included {
+  background: var(--color-success-soft);
+  border-color: transparent;
+  color: var(--color-success);
+}
+.plan-detail-cap.not-included {
+  background: var(--color-surface-alt);
+  border-color: transparent;
+  color: var(--color-text-faint);
+}
+.plan-detail-help {
+  font-size: 12px;
+  color: var(--color-text-faint);
+  margin-top: 10px;
+}
+.plan-details-country-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+.plan-details-country-grid div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+.plan-details-country-grid span {
+  font-size: 1.35rem;
+}
+.plan-networks {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.plan-networks div {
+  padding: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+.plan-networks span,
+.purchase-facts span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+.plan-before-buy {
+  display: grid;
+  gap: 10px;
+}
+.plan-before-buy p {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  color: var(--color-text-muted);
+}
+.purchase-facts {
+  display: grid;
+  gap: 6px;
+  margin: 16px 0;
+  padding: 12px;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+@media (max-width: 700px) {
+  .plan-detail-cap-grid,
+  .plan-networks {
+    grid-template-columns: 1fr;
+  }
+}
