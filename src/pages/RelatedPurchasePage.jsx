@@ -13,7 +13,12 @@ import { Card } from "../components/ui/Card.jsx";
 import { Spinner } from "../components/ui/Spinner.jsx";
 import { NetworkErrorBanner } from "../components/ui/NetworkErrorBanner.jsx";
 
-import { getIccid, getLpa, statusMeta } from "../utils/orderData.js";
+import {
+  getIccid,
+  getLpa,
+  statusMeta,
+  isRechargeable,
+} from "../utils/orderData.js";
 
 import { getOrderAccess, rememberOrder } from "../utils/orderStorage.js";
 
@@ -50,9 +55,6 @@ export function RelatedPurchasePage({ mode }) {
 
   const [error, setError] = useState(null);
 
-  /*
-   * Load wallet balance for logged-in users.
-   */
   useEffect(() => {
     if (!user) return;
 
@@ -82,9 +84,6 @@ export function RelatedPurchasePage({ mode }) {
     selected &&
     walletBalance >= Number(selected.price);
 
-  /*
-   * Load the original order.
-   */
   useEffect(() => {
     if (!id) {
       setLoading(false);
@@ -109,10 +108,6 @@ export function RelatedPurchasePage({ mode }) {
 
         rememberOrder(id, token);
 
-        /*
-         * Top Up needs usage information to know whether
-         * the existing eSIM is rechargeable.
-         */
         if (isTopUp) {
           ordersApi
             .getUsage(id, token)
@@ -144,15 +139,6 @@ export function RelatedPurchasePage({ mode }) {
     };
   }, [id, token, isTopUp]);
 
-  /*
-   * Load related products from the dedicated backend endpoint.
-   *
-   * Top Up:
-   *   GET /api/products/addons/:orderId
-   *
-   * Replacement:
-   *   GET /api/products/replacements/:orderId
-   */
   useEffect(() => {
     if (!order) return;
     if (!isTopUp && !isReplacement) return;
@@ -196,23 +182,14 @@ export function RelatedPurchasePage({ mode }) {
     };
   }, [order, isTopUp, isReplacement, id, token]);
 
-  /*
-   * Top Up products are already filtered by the backend.
-   *
-   * We only check the current eSIM's rechargeable status.
-   *
-   * Replacement products are also already filtered by the
-   * backend for the current order.
-   */
+  const rechargeable = usage?.rechargeable ?? isRechargeable(order);
+
   const candidates = isTopUp
-    ? usage?.rechargeable === true
+    ? rechargeable === true
       ? products.filter((product) => product.active)
       : []
     : products.filter((product) => product.active);
 
-  /*
-   * Start checkout.
-   */
   async function submit(e) {
     e.preventDefault();
 

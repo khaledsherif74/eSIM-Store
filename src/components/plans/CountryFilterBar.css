@@ -2,26 +2,49 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: var(--space-2) 0 var(--space-6);
+  margin: var(--space-4) 0 var(--space-6);
 }
 
 .country-filter-track {
   display: flex;
-  align-items: center;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 12px;
   overflow-x: auto;
+  overflow-y: hidden;
   scroll-behavior: smooth;
-  padding: 4px 2px 10px;
+  padding: 12px 6px;
   scrollbar-width: none;
   flex: 1;
 }
 
-.country-filter-track::-webkit-scrollbar { display: none; }
+.country-filter-track::-webkit-scrollbar {
+  display: none;
+}
 
+/* Pill = column: circle + label */
 .country-filter-pill {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 68px;
+  max-width: 84px;
+  flex: 0 0 auto;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Circle wrapper */
+.country-filter-pill-circle {
+  width: 52px;
+  height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -29,25 +52,31 @@
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
-  transition: transform var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease), box-shadow var(--duration-fast) var(--ease), background var(--duration-fast) var(--ease);
+  overflow: hidden;
+  transform: scale(1);
+  transform-origin: center center;
+  transition:
+    transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 
-.country-filter-pill:hover {
-  transform: translateY(-1px);
+.country-filter-pill:hover .country-filter-pill-circle,
+.country-filter-pill:focus-visible .country-filter-pill-circle {
+  transform: scale(1.15);
   border-color: var(--color-primary);
   box-shadow: var(--shadow-md);
 }
 
-.country-filter-pill.active {
-  background: var(--color-primary-soft);
+.country-filter-pill.active .country-filter-pill-circle {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-soft);
 }
 
-.country-filter-flag {
-  font-size: 1.65rem;
-  line-height: 1;
-  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+/* Flag & region icon wrappers */
+.country-filter-flag,
+.country-filter-region-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -55,24 +84,82 @@
   height: 100%;
 }
 
+/* Country flags: 4:3 landscape, cropped from taller originals */
 .country-filter-flag img {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 27px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 3px;
   border: 1px solid var(--color-border);
   display: block;
+  box-shadow: 0 1px 2px rgba(16, 21, 31, 0.08);
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+.country-filter-pill:hover .country-filter-flag img,
+.country-filter-pill:hover .country-filter-region-icon img {
+  transform: scale(1.06);
+}
+
+/* Region images — same 4:3 landscape */
+.country-filter-region-icon img {
+  width: 36px;
+  height: 27px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+  display: block;
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center center;
+}
+
+.country-filter-region-emoji {
+  font-size: 24px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
 }
 
 .country-filter-all-icon {
-  font-size: 1.35rem;
+  font-size: 1.45rem;
   color: var(--color-primary);
   font-weight: 700;
   line-height: 1;
 }
 
-.country-filter-pill-label { display: none; }
+/* Label under each circle */
+.country-filter-pill-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 84px;
+  transition: color 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+.country-filter-pill:hover .country-filter-pill-label {
+  color: var(--color-text);
+}
+
+.country-filter-pill.active .country-filter-pill-label {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Region pills get a soft tint so they stand apart from countries */
+.country-filter-region .country-filter-pill-circle {
+  background: var(--color-primary-soft);
+}
+
+/* Scroll arrows */
 .country-filter-scroll-btn {
   flex: 0 0 36px;
   width: 36px;
@@ -84,6 +171,8 @@
   align-items: center;
   justify-content: center;
   color: var(--color-text-muted);
+  cursor: pointer;
+  align-self: center;
 }
 
 .country-filter-scroll-btn:hover {
@@ -92,7 +181,37 @@
 }
 
 @media (max-width: 640px) {
-  .country-filter-bar { gap: 6px; }
-  .country-filter-scroll-btn { display: none; }
-  .country-filter-pill { width: 44px; height: 44px; flex-basis: 44px; }
+  .country-filter-bar {
+    gap: 6px;
+  }
+
+  .country-filter-scroll-btn {
+    display: none;
+  }
+
+  .country-filter-track {
+    gap: 10px;
+    padding: 10px 4px;
+  }
+
+  .country-filter-pill {
+    min-width: 60px;
+    max-width: 72px;
+  }
+
+  .country-filter-pill-circle {
+    width: 46px;
+    height: 46px;
+  }
+
+  .country-filter-flag img,
+  .country-filter-region-icon img {
+    width: 32px;
+    height: 24px;
+  }
+
+  .country-filter-pill-label {
+    font-size: 11px;
+    max-width: 72px;
+  }
 }

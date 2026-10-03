@@ -4,7 +4,14 @@
   gap: var(--space-3);
   position: relative;
 }
+.plan-card-clickable {
+  cursor: pointer;
+}
 
+.plan-card-clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
 .plan-card-highlight {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-soft);

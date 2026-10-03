@@ -4,7 +4,11 @@ import { countryName } from "../../utils/countries.js";
 import { Flag } from "../ui/Flag.jsx";
 import "./NoFullCoverageHelper.css";
 
-export function NoFullCoverageHelper({ comboPlans, uncoveredCountries }) {
+export function NoFullCoverageHelper({
+  comboPlans,
+  uncoveredCountries,
+  onOpenPlan,
+}) {
   return (
     <div className="no-full-coverage">
       <div className="no-full-coverage-banner">
@@ -24,7 +28,7 @@ export function NoFullCoverageHelper({ comboPlans, uncoveredCountries }) {
               Option {i + 1} —{" "}
               {coveredCountries.map((c) => countryName(c)).join(", ")}
             </span>
-            <PlanCard plan={plan} />
+            <PlanCard plan={plan} onOpen={onOpenPlan} />
           </div>
         ))}
       </div>
@@ -33,7 +37,7 @@ export function NoFullCoverageHelper({ comboPlans, uncoveredCountries }) {
         <div className="no-full-coverage-gap">
           <XCircle size={18} />
           <div>
-            <strong>We don't currently sell an eSIM for:</strong>{" "}
+            <strong>We don't currently sell an eSIM for:</strong>
             <span className="no-full-coverage-gap-list">
               {uncoveredCountries.map((c, i) => (
                 <span key={c}>

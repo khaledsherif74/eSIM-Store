@@ -23,7 +23,11 @@
   width: 32px;
   height: 32px;
   border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-success));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-success)
+  );
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -88,10 +92,13 @@
   color: var(--color-text);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1000px) {
   .navbar-links {
-    gap: var(--space-4);
+    display: none;
   }
+}
+
+@media (max-width: 640px) {
   .navbar-title {
     display: none;
   }

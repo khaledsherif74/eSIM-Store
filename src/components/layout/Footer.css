@@ -91,6 +91,12 @@
   background: var(--color-primary);
   color: #fff;
 }
+@media (max-width: 1000px) {
+  .footer {
+    padding-bottom: calc(var(--bottom-nav-height) + 24px);
+  }
+}
+
 @media (max-width: 850px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -99,6 +105,7 @@
     flex-direction: column;
   }
 }
+
 @media (max-width: 520px) {
   .footer-grid {
     grid-template-columns: 1fr;

@@ -19,6 +19,7 @@ import { Button } from "../components/ui/Button.jsx";
 import { Spinner } from "../components/ui/Spinner.jsx";
 import { NetworkErrorBanner } from "../components/ui/NetworkErrorBanner.jsx";
 import { NoFullCoverageHelper } from "../components/trip/NoFullCoverageHelper.jsx";
+import { PlanDetailsModal } from "../components/plans/PlanDetailsModal.jsx";
 import { useCountries } from "../hooks/useCountries.js";
 import { useProductSearch } from "../hooks/useProductSearch.js";
 import { useProducts } from "../hooks/useProducts.js";
@@ -35,7 +36,6 @@ import {
 import "./HomePage.css";
 import hero from "../public/images/hero.png";
 
-// UI sort id -> backend sortBy value (see productRepository.listActiveProducts).
 const SORT_TO_BACKEND = {
   popular: "popular",
   cheapest: "price_asc",
@@ -45,8 +45,6 @@ const SORT_TO_BACKEND = {
   newest: "newest",
 };
 
-// SORT_OPTIONS (from PlanFilters.jsx) carries hardcoded English labels —
-// this maps each option's id to its translation key instead.
 const SORT_LABEL_KEYS = {
   popular: "home.sort_popular",
   cheapest: "home.sort_cheapest",
@@ -58,14 +56,8 @@ const SORT_LABEL_KEYS = {
 
 const PAGE_SIZE = 20;
 
-/**
- * The Home page — the single browsing hub for the store, whether or not
- * the person is logged in. Combines what used to be three separate pages:
- * the old marketing LandingPage, PlansPage's filter/sort/paginate grid, and
- * PlanYourTripPage's multi-destination coverage search — a plan the person
- * hasn't decided on yet shouldn't need three different pages to find.
- */
 export function HomePage() {
+  const [openPlanId, setOpenPlanId] = useState(null);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const {
@@ -84,7 +76,10 @@ export function HomePage() {
   const { currency, setCurrency } = useCurrency();
   const query = params.get("q") || "";
   const type = params.get("type") || "all";
-  const data = params.get("data") || "all";
+  const data = (params.get("data") || "")
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
   const calls = params.get("calls") || "any";
   const sms = params.get("sms") || "any";
   const hotspot = params.get("hotspot") || "any";
@@ -110,7 +105,7 @@ export function HomePage() {
     regionIds.join(","),
     queryInput,
     type,
-    data,
+    data.join(","),
     calls,
     sms,
     hotspot,
@@ -140,7 +135,7 @@ export function HomePage() {
       regionIds.join(","),
       queryInput,
       type,
-      data,
+      data.join(","),
       calls,
       sms,
       hotspot,
@@ -153,11 +148,6 @@ export function HomePage() {
   const { products, total, totalPages, isLoading, error } =
     useProductSearch(searchParams);
 
-  // "Plan Your Trip", folded in: when the person has picked 2+ individual
-  // countries (not regions — a region is too broad for a meaningful
-  // "uncovered country" gap analysis) and no single plan covers all of
-  // them, fall back to the same coverage-combo logic the old dedicated
-  // page used, instead of just showing an empty grid.
   const needsCoverageFallback =
     !isLoading &&
     total === 0 &&
@@ -192,7 +182,10 @@ export function HomePage() {
     dispatch(addDestination(option));
   }
   function selectCountryFromSlider(code) {
-    if (!code) return;
+    if (!code) {
+      dispatch(clearTrip());
+      return;
+    }
     const country = masterCountries.find((c) => c.code === code);
     if (country)
       addDest({
@@ -202,6 +195,17 @@ export function HomePage() {
         flag: country.flag,
         kind: "country",
       });
+  }
+  function selectRegionFromSlider(regionId) {
+    if (!regionId) return;
+    const region = masterRegions.find((r) => r.id === regionId);
+    if (region) {
+      addDest({
+        id: region.id,
+        name: region.name,
+        kind: "region",
+      });
+    }
   }
 
   function goToPage(n) {
@@ -217,7 +221,7 @@ export function HomePage() {
   const hasFilters = !!(
     queryInput ||
     type !== "all" ||
-    data !== "all" ||
+    data.length > 0 ||
     calls !== "any" ||
     sms !== "any" ||
     hotspot !== "any" ||
@@ -286,13 +290,22 @@ export function HomePage() {
       <div className="container home-body">
         <CountryFilterBar
           countries={countries}
-          activeCode={null}
+          regions={masterRegions}
+          activeCode={
+            destinations.find((d) => d.kind === "country")?.code || null
+          }
+          activeRegionId={
+            destinations.find((d) => d.kind === "region")?.id || null
+          }
           onSelect={selectCountryFromSlider}
+          onSelectRegion={selectRegionFromSlider}
+          onClear={() => dispatch(clearTrip())}
         />
 
         <div className="home-toolbar">
           <span className="home-results-count">
-            {t("home.results_count", { count: total })}
+            <strong>{total}</strong>{" "}
+            {t("home.results_count", { count: "" }).trim()}
           </span>
           <div className="home-toolbar-controls">
             <label className="home-toolbar-select">
@@ -305,7 +318,7 @@ export function HomePage() {
               >
                 {DISPLAY_CURRENCIES.map((c) => (
                   <option key={c.code} value={c.code}>
-                    {c.code}
+                    {c.code} · {c.name}
                   </option>
                 ))}
               </select>
@@ -336,9 +349,6 @@ export function HomePage() {
         </div>
 
         <div className="home-layout">
-          {/* Sidebar: search + filters as compact selection controls.
-              Always visible on desktop; collapses behind the "Filters"
-              toolbar button above on mobile (see .home-sidebar.open). */}
           <aside className={`home-sidebar${filtersOpen ? " open" : ""}`}>
             <div className="home-sidebar-section">
               <div className="home-sidebar-heading">
@@ -372,10 +382,15 @@ export function HomePage() {
               />
               <FilterPillGroup
                 label={t("home.data_label")}
+                multi
                 value={data}
-                onChange={(v) => setFilter("data", v)}
+                onChange={(next) => {
+                  const nextParams = new URLSearchParams(params);
+                  if (next.length) nextParams.set("data", next.join(","));
+                  else nextParams.delete("data");
+                  setParams(nextParams, { replace: true });
+                }}
                 options={[
-                  { value: "all", label: t("home.data_all") },
                   { value: "small", label: t("home.data_small") },
                   { value: "medium", label: t("home.data_medium") },
                   { value: "large", label: t("home.data_large") },
@@ -461,11 +476,13 @@ export function HomePage() {
                 <PlanGrid
                   plans={coverage.fullCoveragePlans}
                   emptyMessage={t("home.no_results")}
+                  onOpenPlan={setOpenPlanId}
                 />
               ) : (
                 <NoFullCoverageHelper
                   comboPlans={coverage.comboPlans}
                   uncoveredCountries={coverage.uncoveredCountries}
+                  onOpenPlan={setOpenPlanId}
                 />
               )
             ) : (
@@ -473,6 +490,7 @@ export function HomePage() {
                 <PlanGrid
                   plans={products}
                   emptyMessage={t("home.no_results")}
+                  onOpenPlan={setOpenPlanId}
                 />
                 {totalPages > 1 && (
                   <Pagination
@@ -486,6 +504,12 @@ export function HomePage() {
           </div>
         </div>
       </div>
+      {openPlanId && (
+        <PlanDetailsModal
+          productId={openPlanId}
+          onClose={() => setOpenPlanId(null)}
+        />
+      )}
     </div>
   );
 }

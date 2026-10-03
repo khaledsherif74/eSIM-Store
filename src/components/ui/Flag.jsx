@@ -1,8 +1,9 @@
 import { flagEmoji, flagImageUrl } from "../../utils/countries.js";
 
 export function Flag({ code, size = 16 }) {
-  const url = flagImageUrl(code);
-  if (!url) return null;
+  if (!code || code.length !== 2) return null;
+  const requestWidth = Math.max(40, Math.ceil(size) * 2);
+  const url = flagImageUrl(code, requestWidth);
   return (
     <img
       src={url}

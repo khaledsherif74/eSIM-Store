@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import {
   Check,
   X,
@@ -19,6 +18,7 @@ import {
 } from "../../utils/productCapabilities.js";
 import { useCurrency } from "../../i18n/CurrencyContext.jsx";
 import "./PlanCard.css";
+
 const Cap = ({ icon: Icon, label, value }) => (
   <span
     className={`plan-capability ${capabilityClass(value)}`}
@@ -28,14 +28,41 @@ const Cap = ({ icon: Icon, label, value }) => (
     <span>{label}</span>
   </span>
 );
-export function PlanCard({ plan, tripBreakdown, highlight, highlightReason }) {
+
+export function PlanCard({
+  plan,
+  tripBreakdown,
+  highlight,
+  highlightReason,
+  onOpen,
+}) {
   const isRegional = plan.countries.length > 3;
   const { format } = useCurrency();
   const approx = format(plan.price);
+
+  const clickable = typeof onOpen === "function";
+
+  const handleClick = clickable ? () => onOpen(plan.productId) : undefined;
+
+  const handleKeyDown = clickable
+    ? (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(plan.productId);
+        }
+      }
+    : undefined;
+
   return (
     <Card
       hoverable
-      className={`plan-card${highlight ? " plan-card-highlight" : ""}`}
+      className={`plan-card${highlight ? " plan-card-highlight" : ""}${
+        clickable ? " plan-card-clickable" : ""
+      }`}
+      role={clickable ? "button" : undefined}
+      tabIndex={clickable ? 0 : undefined}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       {highlight && (
         <div className="plan-card-highlight-banner">
@@ -43,6 +70,7 @@ export function PlanCard({ plan, tripBreakdown, highlight, highlightReason }) {
           {highlightReason || "Recommended"}
         </div>
       )}
+
       <div className="plan-card-header">
         {plan.providerLogo ? (
           <img src={plan.providerLogo} alt="" className="plan-card-logo" />
@@ -54,7 +82,9 @@ export function PlanCard({ plan, tripBreakdown, highlight, highlightReason }) {
         <span className="plan-card-provider">{plan.providerName}</span>
         {plan.requiresKyc && <Badge tone="warning">ID verification</Badge>}
       </div>
+
       <h3 className="plan-card-title">{plan.title}</h3>
+
       <div className="plan-card-meta">
         <span className="plan-card-meta-item">
           <Wifi size={15} />
@@ -65,12 +95,14 @@ export function PlanCard({ plan, tripBreakdown, highlight, highlightReason }) {
           {plan.validityDays ?? "—"} days
         </span>
       </div>
+
       <div className="plan-capabilities">
         <Cap icon={Wifi} label="Data" value={plan.capabilities?.data} />
         <Cap icon={Phone} label="Calls" value={plan.capabilities?.calls} />
         <Cap icon={MessageSquare} label="SMS" value={plan.capabilities?.sms} />
         <Cap icon={Radio} label="Hotspot" value={plan.capabilities?.hotspot} />
       </div>
+
       {tripBreakdown ? (
         <ul className="plan-card-breakdown">
           {tripBreakdown.map(({ code, covered }) => (
@@ -93,17 +125,29 @@ export function PlanCard({ plan, tripBreakdown, highlight, highlightReason }) {
           ))}
         </ul>
       )}
+
       {plan.description?.summary && (
         <p className="plan-card-summary">{plan.description.summary}</p>
       )}
+
       <div className="plan-card-footer">
         <div className="plan-card-price">
           ${Number(plan.price).toFixed(2)} <small>{plan.currency}</small>
           {approx && <small className="plan-card-price-approx">{approx}</small>}
         </div>
-        <Link to={`/plans/${plan.productId}`}>
-          <Button size="sm">View plan</Button>
-        </Link>
+        <Button
+          size="sm"
+          onClick={
+            clickable
+              ? (e) => {
+                  e.stopPropagation();
+                  onOpen(plan.productId);
+                }
+              : undefined
+          }
+        >
+          View plan
+        </Button>
       </div>
     </Card>
   );

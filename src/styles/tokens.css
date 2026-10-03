@@ -59,6 +59,7 @@
   /* ---- Layout ---- */
   --container-max: 1440px;
   --header-height: 64px;
+  --bottom-nav-height: 64px;
 
   /* ---- Motion ---- */
   --ease: cubic-bezier(0.4, 0, 0.2, 1);

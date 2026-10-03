@@ -23,7 +23,7 @@ export function flagEmoji(code) {
   return String.fromCodePoint(...codePoints);
 }
 
-export function flagImageUrl(code, width = 40) {
+export function flagImageUrl(code, width = 80) {
   if (!code || code.length !== 2) return null;
   return `https://flagcdn.com/w${width}/${code.toLowerCase()}.png`;
 }
