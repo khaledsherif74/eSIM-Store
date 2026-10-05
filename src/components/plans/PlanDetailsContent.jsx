@@ -1,28 +1,31 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Activity,
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
   Calendar,
   CheckCircle2,
+  Gauge,
   Globe2,
+  Hash,
+  MapPin,
   MessageSquare,
+  Network,
   Phone,
   Radio,
+  RefreshCw,
   ShieldCheck,
   Smartphone,
   Wifi,
-  Network,
-  ArrowRight,
-  ArrowLeft,
+  Zap,
 } from "lucide-react";
 import { useCurrency } from "../../i18n/CurrencyContext.jsx";
 import { Button } from "../ui/Button.jsx";
 import { Badge } from "../ui/Badge.jsx";
-import { Card } from "../ui/Card.jsx";
-import { Spinner } from "../ui/Spinner.jsx";
 import { Flag } from "../ui/Flag.jsx";
-import { productsApi } from "../../services/productsApi.js";
 import { countryName } from "../../utils/countries.js";
 import {
   capabilityLabel,
@@ -39,31 +42,63 @@ const Cap = ({ icon: Icon, label, value }) => (
   </div>
 );
 
+const InfoRow = ({ icon: Icon, label, value }) => {
+  if (!value || value === "unknown" || value === "not_included") return null;
+  return (
+    <div className="plan-good-row">
+      <Icon size={18} className="plan-good-icon" />
+      <div className="plan-good-text">
+        <span className="plan-good-label">{label}</span>
+        <strong className="plan-good-value">{value}</strong>
+      </div>
+    </div>
+  );
+};
+
 export function PlanDetailsContent({ plan, onBack }) {
   const { t } = useTranslation();
   const nav = useNavigate();
   const { format } = useCurrency();
-  const [networks, setNetworks] = useState([]);
-  const [netLoading, setNetLoading] = useState(false);
-
-  useEffect(() => {
-    if (!plan) return;
-    setNetLoading(true);
-    productsApi
-      .getProductNetworks(plan.productId)
-      .then((r) => setNetworks(r.networks || []))
-      .catch(() => {})
-      .finally(() => setNetLoading(false));
-  }, [plan]);
 
   if (!plan) return null;
 
   const managementOnly =
     plan.category === "esim_addon" || plan.category === "esim_replacement";
   const details = plan.description?.items || [];
+  const caps = plan.capabilities || {};
 
   const handleBack =
     onBack || (() => (window.history.length > 1 ? nav(-1) : nav("/")));
+
+  const goodToKnow = [
+    { icon: Network, label: "Network", value: caps.networksShort },
+    {
+      icon: RefreshCw,
+      label: "Activation policy",
+      value: caps.activationPolicy,
+    },
+    { icon: MapPin, label: "IP routing", value: caps.ipBreakout },
+    {
+      icon: Radio,
+      label: "Hotspot",
+      value:
+        caps.hotspot === "included"
+          ? "Available"
+          : caps.hotspot === "not_included"
+            ? "Not available"
+            : null,
+    },
+    { icon: Gauge, label: "Speed", value: caps.speed },
+    {
+      icon: RefreshCw,
+      label: "Top-up",
+      value: caps.rechargeable ? "Available" : "Not available",
+    },
+    { icon: BookOpen, label: "Usage tracking", value: caps.usageTracking },
+    { icon: Hash, label: "Local number", value: caps.phoneNumberPrefix },
+  ];
+
+  const hasGoodToKnow = goodToKnow.some((r) => r.value);
 
   return (
     <>
@@ -85,6 +120,8 @@ export function PlanDetailsContent({ plan, onBack }) {
             {t("plan_details.id_verification_required")}
           </Badge>
         )}
+        {caps.fiveG === "included" && <Badge tone="primary">5G</Badge>}
+        {caps.unlimited && <Badge tone="success">Unlimited</Badge>}
       </div>
 
       <h1 className="plan-details-title">{plan.title}</h1>
@@ -93,13 +130,23 @@ export function PlanDetailsContent({ plan, onBack }) {
         <p className="plan-details-summary">{plan.description.summary}</p>
       )}
 
-      {/* Compact stats */}
+      {plan.description?.attention && (
+        <div className="plan-details-attention" role="alert">
+          <AlertTriangle size={18} />
+          <div>
+            <strong>Attention</strong>
+            <p>{plan.description.attention}</p>
+          </div>
+        </div>
+      )}
+
       <div className="plan-details-stats">
         <div className="plan-details-stat">
           <Wifi size={18} />
           <div>
             <strong>
-              {plan.dataLimit ?? "—"} {plan.dataUnit || ""}
+              {caps.unlimited ? "Unlimited" : (plan.dataLimit ?? "—")}{" "}
+              {!caps.unlimited && (plan.dataUnit || "")}
             </strong>
             <span>{t("plan_details.data_allowance")}</span>
           </div>
@@ -122,7 +169,6 @@ export function PlanDetailsContent({ plan, onBack }) {
         </div>
       </div>
 
-      {/* Price + Buy inline */}
       <div className="plan-details-purchase-bar">
         <div className="plan-details-price-block">
           <div className="plan-details-price">
@@ -149,7 +195,6 @@ export function PlanDetailsContent({ plan, onBack }) {
         )}
       </div>
 
-      {/* Capabilities — one row */}
       <section className="plan-details-section">
         <div className="detail-section-title">
           <h2>{t("plan_details.capabilities_title")}</h2>
@@ -158,22 +203,22 @@ export function PlanDetailsContent({ plan, onBack }) {
           <Cap
             icon={Wifi}
             label={t("plan_details.mobile_data")}
-            value={plan.capabilities?.data}
+            value={caps.data}
           />
           <Cap
             icon={Phone}
             label={t("plan_details.voice_calls")}
-            value={plan.capabilities?.calls}
+            value={caps.calls}
           />
           <Cap
             icon={MessageSquare}
             label={t("plan_details.sms")}
-            value={plan.capabilities?.sms}
+            value={caps.sms}
           />
           <Cap
             icon={Radio}
             label={t("plan_details.hotspot")}
-            value={plan.capabilities?.hotspot}
+            value={caps.hotspot}
           />
         </div>
         <p className="plan-detail-help">
@@ -181,62 +226,31 @@ export function PlanDetailsContent({ plan, onBack }) {
         </p>
       </section>
 
+      {hasGoodToKnow && (
+        <section className="plan-details-section">
+          <div className="detail-section-title">
+            <h2>Good to know</h2>
+            <Zap size={18} />
+          </div>
+          <div className="plan-good-grid">
+            {goodToKnow.map((row) => (
+              <InfoRow
+                key={row.label}
+                icon={row.icon}
+                label={row.label}
+                value={row.value}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
       {plan.requiresKyc && (
         <div className="plan-details-kyc">
           <ShieldCheck size={18} />
           <span>{t("plan_details.kyc_note")}</span>
         </div>
       )}
-
-      <section className="plan-details-section">
-        <div className="detail-section-title">
-          <h2>{t("plan_details.coverage")}</h2>
-          <span>
-            {plan.countries.length} {t("plan_details.destinations")}
-          </span>
-        </div>
-        <div className="plan-details-country-grid">
-          {plan.countries.map((c) => (
-            <div key={c}>
-              <span>
-                <Flag code={c} size={20} />
-              </span>
-              <strong>{countryName(c)}</strong>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="plan-details-section">
-        <div className="detail-section-title">
-          <h2>{t("plan_details.networks")}</h2>
-          <Network size={18} />
-        </div>
-        {netLoading ? (
-          <Spinner label={t("plan_details.loading_networks")} />
-        ) : networks.length ? (
-          <div className="plan-networks">
-            {networks.map((n, i) => (
-              <div key={i}>
-                <strong>
-                  {n.name ||
-                    n.networkName ||
-                    n.operator ||
-                    t("plan_details.mobile_network")}
-                </strong>
-                <span>
-                  {n.country ||
-                    n.countryCode ||
-                    n.mccmnc ||
-                    t("plan_details.provider_network")}
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="muted">{t("plan_details.no_network_data")}</p>
-        )}
-      </section>
 
       {details.length > 0 && (
         <section className="plan-details-section">
@@ -275,10 +289,24 @@ export function PlanDetailsContent({ plan, onBack }) {
         </div>
       </section>
 
-      <div className="plan-details-help-footer">
-        <strong>{t("plan_details.need_help_choosing")}</strong>
-        <span>{t("plan_details.trip_helper_note")}</span>
-      </div>
+      <section className="plan-details-section">
+        <div className="detail-section-title">
+          <h2>{t("plan_details.coverage")}</h2>
+          <span>
+            {plan.countries.length} {t("plan_details.destinations")}
+          </span>
+        </div>
+        <div className="plan-details-country-grid">
+          {plan.countries.map((c) => (
+            <div key={c}>
+              <span>
+                <Flag code={c} size={20} />
+              </span>
+              <strong>{countryName(c)}</strong>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 }

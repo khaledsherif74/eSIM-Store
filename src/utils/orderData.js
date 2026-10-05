@@ -57,8 +57,13 @@ export function getOneClickInstall(order) {
 }
 
 export function isRechargeable(order) {
-  const value = detail(order, "RECHARGABLE");
-  return value === "true" || value === true;
+  const topup = detail(order, "TOPUP");
+  if (topup === "1" || topup === 1 || topup === true || topup === "true")
+    return true;
+  if (topup === "0" || topup === 0 || topup === false || topup === "false")
+    return false;
+  const legacy = detail(order, "RECHARGABLE");
+  return legacy === "true" || legacy === true;
 }
 
 const STATUS_META = {
