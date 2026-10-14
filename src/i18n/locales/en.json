@@ -78,7 +78,16 @@
     "region_badge": "Region",
     "no_destination_match": "No destinations match",
     "currency_label": "Currency",
-    "results_count": "{{count}} plans"
+    "results_count": "{{count}} plans",
+    "country_info": {
+      "btn1": "Best value per GB",
+      "btn2": "Data per plan",
+      "btn3": "Validity",
+      "days": "days",
+      "fiveG_plans": "5G plans",
+      "hotspot": "Hotspot",
+      "unlimited": "Unlimited from $"
+    }
   },
   "auth": {
     "welcome": "Welcome to eSIM Store",
@@ -230,6 +239,13 @@
     "trip_helper_note": "Use Plan Your Trip to compare coverage across several countries automatically.",
     "plan_your_trip": "Plan your trip",
     "back": "Back"
+  },
+  "NoFullCoverageHelper": {
+    "banner": "There's no single eSIM that covers your entire trip.",
+    "banner_alt": "Here's the smallest combination of plans that gets you the closest.",
+    "option": "Option",
+    "gap": "We don't currently sell an eSIM for:",
+    "another": "You'll need a local SIM or another provider for that leg of the trip."
   },
   "checkout": {
     "loading": "Loading plan…",

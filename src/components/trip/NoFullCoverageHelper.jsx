@@ -1,4 +1,5 @@
 import { AlertTriangle, XCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { PlanCard } from "../plans/PlanCard.jsx";
 import { countryName } from "../../utils/countries.js";
 import { Flag } from "../ui/Flag.jsx";
@@ -9,15 +10,15 @@ export function NoFullCoverageHelper({
   uncoveredCountries,
   onOpenPlan,
 }) {
+  const { t } = useTranslation();
+
   return (
     <div className="no-full-coverage">
       <div className="no-full-coverage-banner">
         <AlertTriangle size={20} />
         <div>
-          <strong>There's no single eSIM that covers your entire trip.</strong>
-          <p>
-            Here's the smallest combination of plans that gets you the closest.
-          </p>
+          <strong>{t("NoFullCoverageHelper.banner")}</strong>
+          <p>{t("NoFullCoverageHelper.banner_alt")}</p>
         </div>
       </div>
 
@@ -25,7 +26,7 @@ export function NoFullCoverageHelper({
         {comboPlans.map(({ plan, coveredCountries }, i) => (
           <div key={plan.productId} className="no-full-coverage-option">
             <span className="no-full-coverage-option-label">
-              Option {i + 1} —{" "}
+              {t("NoFullCoverageHelper.option")} {i + 1} —{" "}
               {coveredCountries.map((c) => countryName(c)).join(", ")}
             </span>
             <PlanCard plan={plan} onOpen={onOpenPlan} />
@@ -37,7 +38,7 @@ export function NoFullCoverageHelper({
         <div className="no-full-coverage-gap">
           <XCircle size={18} />
           <div>
-            <strong>We don't currently sell an eSIM for:</strong>
+            <strong>{t("NoFullCoverageHelper.gap")}</strong>
             <span className="no-full-coverage-gap-list">
               {uncoveredCountries.map((c, i) => (
                 <span key={c}>
@@ -46,11 +47,7 @@ export function NoFullCoverageHelper({
                 </span>
               ))}
             </span>
-            .
-            <p>
-              You'll need a local SIM or another provider for that leg of the
-              trip.
-            </p>
+            .<p>{t("NoFullCoverageHelper.another")}</p>
           </div>
         </div>
       )}

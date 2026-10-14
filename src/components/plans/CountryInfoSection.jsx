@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import "./CountryInfoSection.css";
 
 function toGb(dataLimit, dataUnit) {
@@ -12,6 +13,7 @@ function toGb(dataLimit, dataUnit) {
 }
 
 export function CountryInfoSection({ products, onCardClick }) {
+  const { t } = useTranslation();
   const stats = useMemo(() => {
     if (!products || !products.length) return null;
 
@@ -134,13 +136,15 @@ export function CountryInfoSection({ products, onCardClick }) {
             className="country-info-card"
             onClick={() => onCardClick?.(stats.bestValue.plan.productId)}
           >
-            <span className="country-info-label">Best value per GB</span>
+            <span className="country-info-label">
+              {t("home.country_info.btn1")}
+            </span>
             <strong className="country-info-value">
               ${stats.bestValue.perGb.toFixed(2)}
             </strong>
             <span className="country-info-sub">
               {stats.bestValue.dataLimit} {stats.bestValue.dataUnit} ·{" "}
-              {stats.bestValue.validityDays} days
+              {stats.bestValue.validityDays} {t("home.country_info.days")}
             </span>
           </button>
         )}
@@ -153,7 +157,9 @@ export function CountryInfoSection({ products, onCardClick }) {
             onCardClick?.(stats.dataRange.target.productId)
           }
         >
-          <span className="country-info-label">Data per plan</span>
+          <span className="country-info-label">
+            {t("home.country_info.btn2")}
+          </span>
           <strong className="country-info-value">{dataRangeLabel}</strong>
         </button>
 
@@ -165,10 +171,12 @@ export function CountryInfoSection({ products, onCardClick }) {
             onCardClick?.(stats.validityRange.target.productId)
           }
         >
-          <span className="country-info-label">Validity</span>
+          <span className="country-info-label">
+            {t("home.country_info.btn3")}
+          </span>
           <strong className="country-info-value">
             {stats.validityRange.min != null
-              ? `${stats.validityRange.min}–${stats.validityRange.max} days`
+              ? `${stats.validityRange.min}–${stats.validityRange.max} ${t("home.country_info.days")}`
               : "—"}
           </strong>
         </button>
@@ -183,17 +191,17 @@ export function CountryInfoSection({ products, onCardClick }) {
         >
           {stats.features.has5G && (
             <span className="country-info-feature">
-              <Check size={14} /> 5G plans
+              <Check size={14} /> {t("home.country_info.FiveG_plans")}
             </span>
           )}
           {stats.features.hasHotspot && (
             <span className="country-info-feature">
-              <Check size={14} /> Hotspot
+              <Check size={14} /> {t("home.country_info.hotspot")}
             </span>
           )}
           {stats.features.cheapestUnlimited && (
             <span className="country-info-feature">
-              <Check size={14} /> Unlimited from $
+              <Check size={14} /> {t("home.country_info.unlimited")}
               {stats.features.cheapestUnlimited.price.toFixed(2)}
             </span>
           )}
