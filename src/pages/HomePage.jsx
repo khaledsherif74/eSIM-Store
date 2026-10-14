@@ -15,11 +15,13 @@ import { Pagination } from "../components/ui/Pagination.jsx";
 import { CountryFilterBar } from "../components/plans/CountryFilterBar.jsx";
 import { SORT_OPTIONS } from "../components/plans/PlanFilters.jsx";
 import { PlanGrid } from "../components/plans/PlanGrid.jsx";
+import { CountryInfoSection } from "../components/plans/CountryInfoSection.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { Spinner } from "../components/ui/Spinner.jsx";
 import { NetworkErrorBanner } from "../components/ui/NetworkErrorBanner.jsx";
 import { NoFullCoverageHelper } from "../components/trip/NoFullCoverageHelper.jsx";
 import { PlanDetailsModal } from "../components/plans/PlanDetailsModal.jsx";
+import { Flag } from "../components/ui/Flag.jsx";
 import { useCountries } from "../hooks/useCountries.js";
 import { useProductSearch } from "../hooks/useProductSearch.js";
 import { useProducts } from "../hooks/useProducts.js";
@@ -85,6 +87,8 @@ export function HomePage() {
   const hotspot = params.get("hotspot") || "any";
   const packaging = params.get("packaging") || "all";
   const priceMax = params.get("priceMax") || "all";
+
+  const [highlightedPlanId, setHighlightedPlanId] = useState(null);
 
   const [queryInput, setQueryInput] = useState(query);
   useEffect(() => {
@@ -218,6 +222,17 @@ export function HomePage() {
     else next.delete(key);
     setParams(next, { replace: true });
   }
+  function scrollToPlan(productId) {
+    if (!productId) return;
+    const el = document.getElementById(`plan-card-${productId}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setHighlightedPlanId(productId);
+    window.setTimeout(() => {
+      setHighlightedPlanId((current) =>
+        current === productId ? null : current,
+      );
+    }, 2000);
+  }
   const hasFilters = !!(
     queryInput ||
     type !== "all" ||
@@ -243,46 +258,71 @@ export function HomePage() {
           <h1>{t("home.hero_title")}</h1>
           <p>{t("home.hero_subtitle")}</p>
 
-          <div className="home-search-card">
-            <span className="home-search-label">{t("home.works_in")}</span>
-            <div className="home-search-chips">
-              {destinations.map((d) => (
-                <span key={d.id} className="home-destination-chip">
-                  {d.kind === "region" ? <Globe2 size={14} /> : d.flag}
-                  {d.name}
-                  <button
-                    type="button"
-                    onClick={() => dispatch(removeDestination(d.id))}
-                    aria-label={`Remove ${d.name}`}
-                  >
-                    <X size={14} />
-                  </button>
-                </span>
-              ))}
-              <div className="home-search-input-cell">
-                <DestinationSearch
-                  options={destinationOptions}
-                  excludeIds={destinations.map((d) => d.id)}
-                  onSelect={addDest}
-                  placeholder={
-                    destinations.length
-                      ? t("home.add_destination_placeholder")
-                      : t("home.destination_placeholder")
-                  }
-                  noMatchLabel={t("home.no_destination_match")}
-                  regionBadgeLabel={t("home.region_badge")}
-                />
+          <div
+            className={`home-hero-row${
+              !isLoading &&
+              countryCodes.length === 1 &&
+              regionIds.length === 0 &&
+              products.length > 0
+                ? " home-hero-row--with-info"
+                : ""
+            }`}
+          >
+            <div className="home-search-card">
+              <span className="home-search-label">{t("home.works_in")}</span>
+              <div className="home-search-chips">
+                {destinations.map((d) => (
+                  <span key={d.id} className="home-destination-chip">
+                    {d.kind === "region" ? (
+                      <Globe2 size={14} />
+                    ) : (
+                      <Flag code={d.code} size={14} />
+                    )}
+                    {d.name}
+                    <button
+                      type="button"
+                      onClick={() => dispatch(removeDestination(d.id))}
+                      aria-label={`Remove ${d.name}`}
+                    >
+                      <X size={14} />
+                    </button>
+                  </span>
+                ))}
+                <div className="home-search-input-cell">
+                  <DestinationSearch
+                    options={destinationOptions}
+                    excludeIds={destinations.map((d) => d.id)}
+                    onSelect={addDest}
+                    placeholder={
+                      destinations.length
+                        ? t("home.add_destination_placeholder")
+                        : t("home.destination_placeholder")
+                    }
+                    noMatchLabel={t("home.no_destination_match")}
+                    regionBadgeLabel={t("home.region_badge")}
+                  />
+                </div>
               </div>
+              {destinations.length > 0 && (
+                <button
+                  type="button"
+                  className="home-search-clear-all"
+                  onClick={() => dispatch(clearTrip())}
+                >
+                  {t("home.clear_all")}
+                </button>
+              )}
             </div>
-            {destinations.length > 0 && (
-              <button
-                type="button"
-                className="home-search-clear-all"
-                onClick={() => dispatch(clearTrip())}
-              >
-                {t("home.clear_all")}
-              </button>
-            )}
+
+            {!isLoading &&
+              countryCodes.length === 1 &&
+              regionIds.length === 0 &&
+              products.length > 0 && (
+                <CountryInfoSection
+                  products={products}
+                  onCardClick={scrollToPlan}
+                />
+              )}
           </div>
         </div>
       </section>
@@ -301,7 +341,6 @@ export function HomePage() {
           onSelectRegion={selectRegionFromSlider}
           onClear={() => dispatch(clearTrip())}
         />
-
         <div className="home-toolbar">
           <span className="home-results-count">
             <strong>{total}</strong>{" "}
@@ -475,6 +514,8 @@ export function HomePage() {
               ) : coverage.status === "full-coverage" ? (
                 <PlanGrid
                   plans={coverage.fullCoveragePlans}
+                  searchCountries={countryCodes}
+                  highlightedPlanId={highlightedPlanId}
                   emptyMessage={t("home.no_results")}
                   onOpenPlan={setOpenPlanId}
                 />
@@ -489,6 +530,8 @@ export function HomePage() {
               <>
                 <PlanGrid
                   plans={products}
+                  searchCountries={countryCodes}
+                  highlightedPlanId={highlightedPlanId}
                   emptyMessage={t("home.no_results")}
                   onOpenPlan={setOpenPlanId}
                 />

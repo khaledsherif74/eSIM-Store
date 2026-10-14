@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ordersApi } from "../services/ordersApi.js";
 import { OrderStatusPanel } from "../components/checkout/OrderStatusPanel.jsx";
 import { rememberOrder } from "../utils/orderStorage.js";
 import { Button } from "../components/ui/Button.jsx";
+import { Spinner } from "../components/ui/Spinner.jsx";
 import "./OrderStatusPage.css";
 
 const TERMINAL = [
@@ -19,6 +20,7 @@ const TERMINAL = [
 ];
 
 export function OrderStatusPage() {
+  const navigate = useNavigate();
   const [params] = useSearchParams();
   const [order, setOrder] = useState(null);
   const [error, setError] = useState(null);
@@ -46,6 +48,7 @@ export function OrderStatusPage() {
     if (!hasPaymobFields) return;
     const paymobFields = Object.fromEntries(params.entries());
     ordersApi.confirmPayment(paymobFields).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -104,6 +107,17 @@ export function OrderStatusPage() {
     };
   }, [orderId, token]);
 
+  useEffect(() => {
+    if (order?.status === "Completed" && orderId && token) {
+      navigate(
+        `/my-esims/${encodeURIComponent(orderId)}?token=${encodeURIComponent(
+          token,
+        )}`,
+        { replace: true },
+      );
+    }
+  }, [order?.status, orderId, token, navigate]);
+
   if (!token) {
     return (
       <div className="container order-status-page">
@@ -116,6 +130,14 @@ export function OrderStatusPage() {
         <Link to="/">
           <Button>Browse plans</Button>
         </Link>
+      </div>
+    );
+  }
+
+  if (order?.status === "Completed") {
+    return (
+      <div className="container order-status-page">
+        <Spinner label="Opening your eSIM…" />
       </div>
     );
   }
@@ -140,23 +162,12 @@ export function OrderStatusPage() {
         </p>
       )}
 
-      {order?.status === "Completed" && (
-        <div className="order-status-actions">
-          <Link
-            to={`/my-esims/${encodeURIComponent(orderId)}?token=${encodeURIComponent(token)}`}
-          >
-            <Button>View your eSIM</Button>
-          </Link>
-          <Link to="/installation">
-            <Button variant="secondary">Installation guide</Button>
-          </Link>
-        </div>
-      )}
-
       {gaveUp && (
         <div className="order-status-actions">
           <Link
-            to={`/my-esims/${encodeURIComponent(orderId)}?token=${encodeURIComponent(token)}`}
+            to={`/my-esims/${encodeURIComponent(
+              orderId,
+            )}?token=${encodeURIComponent(token)}`}
           >
             <Button>Open order</Button>
           </Link>

@@ -9,9 +9,91 @@ function formatPrice(n) {
   return Number(n).toFixed(2);
 }
 
+function CountriesCell({ countries, searchCountries }) {
+  if (!countries || countries.length === 0) {
+    return <span className="plan-card-country-name">—</span>;
+  }
+
+  const searched =
+    Array.isArray(searchCountries) && searchCountries.length
+      ? countries.filter((c) => searchCountries.includes(c))
+      : [];
+
+  if (searched.length >= 2) {
+    const shown = searched.slice(0, 3);
+    const remaining = countries.length - shown.length;
+    return (
+      <>
+        {shown.map((code) => (
+          <Flag key={code} code={code} size={14} />
+        ))}
+        {remaining > 0 && (
+          <span className="plan-card-country-more">+{remaining}</span>
+        )}
+      </>
+    );
+  }
+
+  if (searched.length === 1) {
+    const [primary, ...rest] = countries;
+    const extraFlags = rest.slice(0, 2);
+    const remainingCount = rest.length - extraFlags.length;
+    return (
+      <>
+        <Flag code={primary} size={14} />
+        <span className="plan-card-country-name">{countryName(primary)}</span>
+        {extraFlags.map((code) => (
+          <Flag key={code} code={code} size={14} />
+        ))}
+        {remainingCount > 0 && (
+          <span className="plan-card-country-more">+{remainingCount}</span>
+        )}
+      </>
+    );
+  }
+
+  if (countries.length === 1) {
+    return (
+      <>
+        <Flag code={countries[0]} size={14} />
+        <span className="plan-card-country-name">
+          {countryName(countries[0])}
+        </span>
+      </>
+    );
+  }
+
+  if (countries.length === 2) {
+    return (
+      <>
+        <Flag code={countries[0]} size={14} />
+        <Flag code={countries[1]} size={14} />
+      </>
+    );
+  }
+
+  const extraFlags = countries.slice(1, 3);
+  const remainingCount = countries.length - 1 - extraFlags.length;
+  return (
+    <>
+      <Flag code={countries[0]} size={14} />
+      <span className="plan-card-country-name">
+        {countryName(countries[0])}
+      </span>
+      {extraFlags.map((code) => (
+        <Flag key={code} code={code} size={14} />
+      ))}
+      {remainingCount > 0 && (
+        <span className="plan-card-country-more">+{remainingCount}</span>
+      )}
+    </>
+  );
+}
+
 export function PlanCard({
   plan,
   tripBreakdown,
+  searchCountries,
   highlight,
   highlightReason,
   onOpen,
@@ -30,10 +112,6 @@ export function PlanCard({
       }
     : undefined;
 
-  const firstCountry = plan.countries?.[0];
-  const countryCount = plan.countries?.length || 0;
-  const isMulti = countryCount > 1;
-
   const primaryTag =
     Array.isArray(plan.tags) && plan.tags.length ? plan.tags[0]?.item : null;
   const has5G = plan.capabilities?.fiveG === "included";
@@ -41,6 +119,7 @@ export function PlanCard({
 
   return (
     <Card
+      id={`plan-card-${plan.productId}`}
       hoverable
       className={`plan-card${highlight ? " plan-card-highlight" : ""}${
         clickable ? " plan-card-clickable" : ""
@@ -101,20 +180,11 @@ export function PlanCard({
               {tripBreakdown.filter((c) => c.covered).length}/
               {tripBreakdown.length} covered
             </span>
-          ) : firstCountry ? (
-            <>
-              <Flag code={firstCountry} size={14} />
-              <span className="plan-card-country-name">
-                {countryName(firstCountry)}
-              </span>
-              {isMulti && (
-                <span className="plan-card-country-more">
-                  +{countryCount - 1}
-                </span>
-              )}
-            </>
           ) : (
-            <span className="plan-card-country-name">—</span>
+            <CountriesCell
+              countries={plan.countries}
+              searchCountries={searchCountries}
+            />
           )}
         </div>
         <span className="plan-card-cta">

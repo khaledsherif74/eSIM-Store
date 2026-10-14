@@ -197,18 +197,24 @@
 .plan-card-country {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-size: 13px;
   font-weight: 600;
   color: var(--color-text);
   min-width: 0;
   flex: 1;
+  overflow: hidden;
+}
+
+.plan-card-country img {
+  flex-shrink: 0;
 }
 
 .plan-card-country-name {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .plan-card-country-more {

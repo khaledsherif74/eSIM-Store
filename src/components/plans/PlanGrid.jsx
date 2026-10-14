@@ -5,6 +5,8 @@ export function PlanGrid({
   plans,
   tripCodes,
   getBreakdown,
+  searchCountries,
+  highlightedPlanId,
   onOpenPlan,
   emptyMessage = "No plans match right now.",
 }) {
@@ -17,6 +19,8 @@ export function PlanGrid({
         <PlanCard
           key={plan.productId}
           plan={plan}
+          searchCountries={searchCountries}
+          highlight={highlightedPlanId === plan.productId}
           tripBreakdown={
             tripCodes && getBreakdown ? getBreakdown(plan) : undefined
           }

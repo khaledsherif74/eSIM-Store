@@ -11,6 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 100px;
 }
 
 .navbar-brand {
@@ -20,26 +21,28 @@
 }
 
 .navbar-mark {
-  width: 32px;
-  height: 32px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary),
-    var(--color-success)
-  );
+  width: 90px;
+  height: 90px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
-  font-family: var(--font-display);
-  font-weight: 700;
 }
 
 .navbar-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: var(--text-lg);
+  font-size: var(--text-2xl);
+  color: transparent;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-success)
+  );
+  background-clip: text;
+}
+
+.navbar-title span {
+  text-transform: uppercase;
 }
 
 .navbar-links {
@@ -98,8 +101,8 @@
   }
 }
 
-@media (max-width: 640px) {
+/* @media (max-width: 640px) {
   .navbar-title {
     display: none;
   }
-}
+} */

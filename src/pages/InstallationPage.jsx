@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Apple, CheckCircle2, ExternalLink, Smartphone } from "lucide-react";
+import { Apple, CheckCircle2, Smartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Card } from "../components/ui/Card.jsx";
 import { Button } from "../components/ui/Button.jsx";
@@ -49,11 +49,6 @@ export function InstallationPage() {
         <Link to="/my-esims">
           <Button>{t("installation.btn_my_esims")}</Button>
         </Link>
-        <a href="https://www.mobimatter.com/" target="_blank" rel="noreferrer">
-          <Button variant="secondary">
-            {t("installation.btn_partner_site")} <ExternalLink size={15} />
-          </Button>
-        </a>
       </div>
     </div>
   );

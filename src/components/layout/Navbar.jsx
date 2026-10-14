@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import "./Navbar.css";
+import logo from "../../public/images/logo.png";
 
 export function Navbar() {
   const { user, loading, logout } = useAuth();
@@ -18,8 +19,9 @@ export function Navbar() {
     <header className="navbar">
       <div className="container navbar-inner">
         <Link to="/" className="navbar-brand">
-          <span className="navbar-mark">e</span>
-          <span className="navbar-title">eSIM Store</span>
+          <img src={logo} className="navbar-mark"></img>
+          {/* <span className="navbar-mark">e</span> */}
+          <span className="navbar-title">eSIM</span>
         </Link>
         <nav className="navbar-links">
           <NavLink
