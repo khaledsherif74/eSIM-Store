@@ -15,10 +15,31 @@ import { CompatibilityPage } from "./pages/CompatibilityPage.jsx";
 import { FaqPage } from "./pages/FaqPage.jsx";
 import { HelpPage } from "./pages/HelpPage.jsx";
 import { AdminLoginPage } from "./pages/AdminLoginPage.jsx";
-import { AdminDashboardPage } from "./pages/AdminDashboardPage.jsx";
+import { AdminLayout } from "./pages/admin/AdminLayout.jsx";
+import { OverviewPage } from "./pages/admin/OverviewPage.jsx";
+import { ProductsPage } from "./pages/admin/ProductsPage.jsx";
+import { UsersPage } from "./pages/admin/UsersPage.jsx";
+import { UserDetailPage } from "./pages/admin/UserDetailPage.jsx";
+import { OperationsPage } from "./pages/admin/OperationsPage.jsx";
+import { CouponsPage } from "./pages/admin/CouponsPage.jsx";
+import { ReferralsPage } from "./pages/admin/ReferralsPage.jsx";
+import { FinanceLayout } from "./pages/finance/FinanceLayout.jsx";
+import {
+  FinanceDashboardPage,
+  FinanceExpensesPage,
+  FinanceReportsPage,
+  FinanceSupplierPage,
+  FinanceCashflowPage,
+  FinanceBalancesPage,
+  FinanceOrdersPage,
+  FinanceSettingsPage,
+} from "./pages/finance/FinancePages.jsx";
 import { AdminForgotPasswordPage } from "./pages/AdminForgotPasswordPage.jsx";
 import { AdminResetPasswordPage } from "./pages/AdminResetPasswordPage.jsx";
-import { RequireAdminSession } from "./components/RequireAdminSession.jsx";
+import {
+  RequireAdminSession,
+  RoleGate,
+} from "./components/RequireAdminSession.jsx";
 import { NotFoundPage } from "./pages/NotFoundPage.jsx";
 import { AuthPage } from "./pages/auth/AuthPage.jsx";
 import { ForgotPasswordPage } from "./pages/auth/ForgotPasswordPage.jsx";
@@ -66,11 +87,81 @@ function ShellRoutes() {
       <Route
         path="/admin"
         element={
-          <RequireAdminSession>
-            <AdminDashboardPage />
+          <RequireAdminSession allow={["Admin", "Support"]}>
+            <AdminLayout />
           </RequireAdminSession>
         }
-      />
+      >
+        <Route
+          index
+          element={
+            <RoleGate allow={["Admin"]}>
+              <OverviewPage />
+            </RoleGate>
+          }
+        />
+        <Route
+          path="products"
+          element={
+            <RoleGate allow={["Admin"]}>
+              <ProductsPage />
+            </RoleGate>
+          }
+        />
+        <Route
+          path="coupons"
+          element={
+            <RoleGate allow={["Admin"]}>
+              <CouponsPage />
+            </RoleGate>
+          }
+        />
+        <Route
+          path="users"
+          element={
+            <RoleGate allow={["Admin"]}>
+              <UsersPage />
+            </RoleGate>
+          }
+        />
+        <Route
+          path="users/:id"
+          element={
+            <RoleGate allow={["Admin"]}>
+              <UserDetailPage />
+            </RoleGate>
+          }
+        />
+        <Route
+          path="referrals"
+          element={
+            <RoleGate allow={["Admin"]}>
+              <ReferralsPage />
+            </RoleGate>
+          }
+        />
+        <Route path="operations" element={<OperationsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+
+      <Route
+        path="/finance"
+        element={
+          <RequireAdminSession allow={["Admin", "Accountant"]}>
+            <FinanceLayout />
+          </RequireAdminSession>
+        }
+      >
+        <Route index element={<FinanceDashboardPage />} />
+        <Route path="expenses" element={<FinanceExpensesPage />} />
+        <Route path="reports" element={<FinanceReportsPage />} />
+        <Route path="supplier" element={<FinanceSupplierPage />} />
+        <Route path="cashflow" element={<FinanceCashflowPage />} />
+        <Route path="balances" element={<FinanceBalancesPage />} />
+        <Route path="orders" element={<FinanceOrdersPage />} />
+        <Route path="settings" element={<FinanceSettingsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
@@ -79,7 +170,9 @@ function ShellRoutes() {
 
 function AppShell() {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith("/admin");
+  const isAdmin =
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/finance");
 
   return (
     <>

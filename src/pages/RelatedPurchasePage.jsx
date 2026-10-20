@@ -44,8 +44,8 @@ export function RelatedPurchasePage({ mode }) {
 
   const [selected, setSelected] = useState(null);
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
 
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -103,8 +103,8 @@ export function RelatedPurchasePage({ mode }) {
 
         setOrder(result);
 
-        setName(result.customer?.name || "");
-        setEmail(result.customer?.email || "");
+        setName(result.customer?.name || user?.name || "");
+        setEmail(result.customer?.email || user?.email || "");
 
         rememberOrder(id, token);
 
@@ -207,10 +207,6 @@ export function RelatedPurchasePage({ mode }) {
         customerName: name,
         customerEmail: email,
 
-        /*
-         * The related purchase must reference the
-         * original order.
-         */
         existingOrderId: order?.parentOrderId || order?.orderId,
 
         paymentMethod: useWallet ? "wallet" : "card",
@@ -236,9 +232,6 @@ export function RelatedPurchasePage({ mode }) {
     }
   }
 
-  /*
-   * Initial loading.
-   */
   if (loading || productsLoading) {
     return (
       <div className="container related-page">
@@ -247,9 +240,6 @@ export function RelatedPurchasePage({ mode }) {
     );
   }
 
-  /*
-   * Order could not be loaded.
-   */
   if (!order) {
     return (
       <div className="container related-page">

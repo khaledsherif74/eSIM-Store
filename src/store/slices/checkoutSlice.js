@@ -9,6 +9,7 @@ export const submitCheckout = createAsyncThunk(
     customerName,
     customerEmail,
     paymentMethod,
+    couponCode,
   }) => {
     return ordersApi.startCheckout({
       productId,
@@ -16,6 +17,7 @@ export const submitCheckout = createAsyncThunk(
       customerName,
       customerEmail,
       paymentMethod,
+      ...(couponCode ? { couponCode } : {}),
     });
   },
 );

@@ -1,0 +1,38 @@
+.ash {
+  --a-navy: #0f2a4a;
+  --a-navy-2: #17406f;
+  --a-blue: #2f6fed;
+  --a-blue-soft: #e8f0ff;
+  --a-green: #12a37f;
+  --a-green-soft: #e4f7f0;
+  --a-purple: #7c5cff;
+  --a-purple-soft: #efeaff;
+  --a-orange: #f08a24;
+  --a-orange-soft: #fff1e0;
+  --a-pink: #e4558a;
+  --a-pink-soft: #fde8f0;
+  --a-bg: #f3f6fb;
+  --a-surface: #ffffff;
+  --a-border: #e1e8f2;
+  --a-text: #14213d;
+  --a-muted: #64748b;
+  --a-sidebar-w: 248px;
+
+  --color-bg: var(--a-bg);
+  --color-surface: var(--a-surface);
+  --color-surface-alt: #f6f8fc;
+  --color-border: var(--a-border);
+  --color-text: var(--a-text);
+  --color-text-muted: var(--a-muted);
+  --color-primary: var(--a-blue);
+  --color-primary-soft: var(--a-blue-soft);
+  --color-success: var(--a-green);
+  --color-success-soft: var(--a-green-soft);
+  --color-warning: var(--a-orange);
+  --color-warning-soft: var(--a-orange-soft);
+  --color-danger: #d64545;
+  --color-danger-soft: #fdecec;
+
+  color: var(--a-text);
+  background: var(--a-bg);
+}

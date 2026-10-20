@@ -5,6 +5,7 @@ import { Lock } from "lucide-react";
 import { Card } from "../components/ui/Card.jsx";
 import { Button } from "../components/ui/Button.jsx";
 import { adminApi } from "../services/adminApi.js";
+import { homeForRole } from "../components/admin/AdminSessionContext.jsx";
 import "./AdminLoginPage.css";
 
 export function AdminLoginPage() {
@@ -20,8 +21,8 @@ export function AdminLoginPage() {
     setError(null);
     setLoading(true);
     try {
-      await adminApi.login(username, password);
-      navigate("/admin", { replace: true });
+      const res = await adminApi.login(username, password);
+      navigate(homeForRole(res.role), { replace: true });
     } catch (err) {
       setError(err.message || "Login failed");
     } finally {

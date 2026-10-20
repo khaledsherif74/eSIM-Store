@@ -31,7 +31,6 @@ export function CountryFilterBar({
       </button>
 
       <div className="country-filter-track" ref={scrollRef}>
-        {/* All destinations */}
         <button
           type="button"
           className={`country-filter-pill country-filter-all${
@@ -47,7 +46,6 @@ export function CountryFilterBar({
           <span className="country-filter-pill-label">All</span>
         </button>
 
-        {/* Regions */}
         {regions.map((region) => (
           <button
             key={region.id}
@@ -88,7 +86,6 @@ export function CountryFilterBar({
           </button>
         ))}
 
-        {/* Countries */}
         {visible.map((country) => (
           <button
             key={country.code}

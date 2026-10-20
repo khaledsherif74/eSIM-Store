@@ -31,7 +31,7 @@ export function CheckoutPage() {
     if (plan) sessionStorage.setItem("esim_pending_product", plan.productId);
   }, [plan]);
 
-  async function handleSubmit({ name, email, paymentMethod }) {
+  async function handleSubmit({ name, email, paymentMethod, couponCode }) {
     try {
       const result = await dispatch(
         submitCheckout({
@@ -40,6 +40,7 @@ export function CheckoutPage() {
           customerName: name,
           customerEmail: email,
           paymentMethod,
+          couponCode,
         }),
       ).unwrap();
 

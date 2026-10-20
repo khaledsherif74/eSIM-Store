@@ -20,7 +20,6 @@ export function Navbar() {
       <div className="container navbar-inner">
         <Link to="/" className="navbar-brand">
           <img src={logo} className="navbar-mark"></img>
-          {/* <span className="navbar-mark">e</span> */}
           <span className="navbar-title">eSIM</span>
         </Link>
         <nav className="navbar-links">

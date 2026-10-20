@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 100px;
+  min-height: 75px;
 }
 
 .navbar-brand {
@@ -21,8 +21,8 @@
 }
 
 .navbar-mark {
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 60px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -100,9 +100,3 @@
     display: none;
   }
 }
-
-/* @media (max-width: 640px) {
-  .navbar-title {
-    display: none;
-  }
-} */

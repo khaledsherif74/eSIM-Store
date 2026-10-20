@@ -21,7 +21,6 @@
   display: none;
 }
 
-/* Pill = column: circle + label */
 .country-filter-pill {
   display: flex;
   flex-direction: column;
@@ -41,7 +40,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Circle wrapper */
 .country-filter-pill-circle {
   width: 52px;
   height: 52px;
@@ -74,7 +72,6 @@
   box-shadow: 0 0 0 3px var(--color-primary-soft);
 }
 
-/* Flag & region icon wrappers */
 .country-filter-flag,
 .country-filter-region-icon {
   display: inline-flex;
@@ -84,7 +81,6 @@
   height: 100%;
 }
 
-/* Country flags: 4:3 landscape, cropped from taller originals */
 .country-filter-flag img {
   width: 36px;
   height: 27px;
@@ -102,7 +98,6 @@
   transform: scale(1.06);
 }
 
-/* Region images — same 4:3 landscape */
 .country-filter-region-icon img {
   width: 36px;
   height: 27px;
@@ -130,7 +125,6 @@
   line-height: 1;
 }
 
-/* Label under each circle */
 .country-filter-pill-label {
   display: block;
   font-size: 12px;
@@ -154,12 +148,10 @@
   font-weight: 700;
 }
 
-/* Region pills get a soft tint so they stand apart from countries */
 .country-filter-region .country-filter-pill-circle {
   background: var(--color-primary-soft);
 }
 
-/* Scroll arrows */
 .country-filter-scroll-btn {
   flex: 0 0 36px;
   width: 36px;

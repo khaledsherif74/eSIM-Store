@@ -3,6 +3,9 @@ import { apiClient } from "./apiClient.js";
 export const authApi = {
   signup: (data) => apiClient.post("/api/auth/signup", data),
   login: (data) => apiClient.post("/api/auth/login", data),
+  googleLogin: (idToken) => apiClient.post("/api/auth/google", { idToken }),
+  appleLogin: (idToken, user) =>
+    apiClient.post("/api/auth/apple", { idToken, user }),
   logout: () => apiClient.post("/api/auth/logout", {}),
   getMe: () => apiClient.get("/api/auth/me"),
   updateProfile: (data) => apiClient.patch("/api/auth/me", data),

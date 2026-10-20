@@ -3,6 +3,9 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Mail, Lock, User, Gift, Eye, EyeOff } from "lucide-react";
 
+import { GoogleLoginButton } from "../../components/auth/GoogleLoginButton";
+import { AppleLoginButton } from "../../components/auth/AppleLoginButton";
+
 import { Card } from "../../components/ui/Card.jsx";
 import { Button } from "../../components/ui/Button.jsx";
 import { Spinner } from "../../components/ui/Spinner.jsx";
@@ -246,6 +249,11 @@ export function AuthPage() {
                   </button>
                 </p>
               </form>
+              <div className="social-divider">Or continue with</div>
+              <div className="social-login-container">
+                <GoogleLoginButton />
+                <AppleLoginButton />
+              </div>
             </>
           ) : (
             <>
@@ -374,6 +382,11 @@ export function AuthPage() {
                   </button>
                 </p>
               </form>
+              <div className="social-divider">Or continue with</div>
+              <div className="social-login-container">
+                <GoogleLoginButton />
+                <AppleLoginButton />
+              </div>
             </>
           )}
         </Card>
