@@ -4,6 +4,7 @@ import { Button } from "../ui/Button.jsx";
 import { walletApi } from "../../services/walletApi.js";
 import { couponsApi } from "../../services/couponsApi.js";
 import "./CheckoutForm.css";
+import "./CheckoutCouponsList.css";
 
 export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
   const { t } = useTranslation();
@@ -19,6 +20,7 @@ export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
   const [appliedQuote, setAppliedQuote] = useState(null);
   const [couponMsg, setCouponMsg] = useState("");
   const [couponBusy, setCouponBusy] = useState(false);
+  const [available, setAvailable] = useState([]);
 
   useEffect(() => {
     if (!user) return;
@@ -33,6 +35,10 @@ export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
       .validate({ productId: plan.productId })
       .then((q) => alive && setOfferQuote(q))
       .catch(() => alive && setOfferQuote(null));
+    couponsApi
+      .available(plan.productId)
+      .then((r) => alive && setAvailable(r.coupons || []))
+      .catch(() => alive && setAvailable([]));
     return () => {
       alive = false;
     };
@@ -50,9 +56,10 @@ export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
     };
   }, [user]);
 
-  async function applyCoupon() {
-    const code = couponInput.trim();
+  async function applyCoupon(codeOverride) {
+    const code = (codeOverride ?? couponInput).trim();
     if (!code) return;
+    setCouponInput(code);
     setCouponBusy(true);
     setCouponMsg("");
     try {
@@ -96,6 +103,11 @@ export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
   const needsNameInput = !user?.name;
   const needsEmailInput = true;
 
+  const couponLabel = (c) =>
+    c.type === "Percent"
+      ? t("checkout.coupon_off_percent", { value: c.value })
+      : t("checkout.coupon_off_fixed", { value: c.value });
+
   return (
     <form className="checkout-form" onSubmit={handleSubmit}>
       <div className="checkout-form-summary">
@@ -104,6 +116,31 @@ export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
           ${Number(plan.price).toFixed(2)} <small>{plan.currency}</small>
         </span>
       </div>
+
+      {!appliedQuote && available.length > 0 && (
+        <div className="checkout-available">
+          <span className="checkout-available-title">
+            {t("checkout.available_coupons")}
+          </span>
+          <div className="checkout-available-list">
+            {available.map((c) => (
+              <button
+                type="button"
+                key={c.code}
+                className="checkout-available-chip"
+                onClick={() => applyCoupon(c.code)}
+                disabled={couponBusy}
+              >
+                <strong dir="ltr">{c.code}</strong>
+                <small>
+                  {couponLabel(c)}
+                  {c.vipOnly ? ` · ${t("checkout.coupon_vip")}` : ""}
+                </small>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="checkout-coupon">
         {appliedQuote ? (
@@ -140,7 +177,7 @@ export function CheckoutForm({ plan, submitting, error, onSubmit, user }) {
               type="button"
               variant="secondary"
               size="sm"
-              onClick={applyCoupon}
+              onClick={() => applyCoupon()}
               disabled={couponBusy || !couponInput.trim()}
             >
               {t("checkout.coupon_apply")}

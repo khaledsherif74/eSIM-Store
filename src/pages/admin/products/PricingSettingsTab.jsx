@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { Card } from "../../../components/ui/Card.jsx";
 import { Button } from "../../../components/ui/Button.jsx";
 import { adminApi } from "../../../services/adminApi.js";
@@ -72,8 +71,7 @@ export function PricingSettingsTab() {
                 <span>{t("admin.products.round_99")}</span>
               </label>
               <p className="fin-note" style={{ gridColumn: "1 / -1" }}>
-                {t("admin.products.fx_note", { rate: data.fx.rate ? fmtNum(data.fx.rate, 2) : "—" })}{" "}
-                <Link to="/admin/operations?tab=secrets" className="fin-link">{t("admin.products.fx_link")}</Link>
+                {t("admin.products.fx_note", { rate: data.fx.rate ? fmtNum(data.fx.rate, 2) : "—" })}
               </p>
               <p className="fin-note" style={{ gridColumn: "1 / -1" }}>{t("admin.products.recompute_auto_note")}</p>
               {msg.text && <p className={msg.type === "err" ? "fin-form-error" : "fin-note"} role={msg.type === "err" ? "alert" : "status"}>{msg.text}</p>}

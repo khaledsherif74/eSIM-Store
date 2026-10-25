@@ -8,4 +8,11 @@ async function validate({ productId, couponCode, customerEmail }) {
   });
 }
 
-export const couponsApi = { validate };
+// Coupons the store chose to show customers for this plan.
+async function available(productId) {
+  return apiClient.get(
+    `/api/coupons/available?productId=${encodeURIComponent(productId)}`,
+  );
+}
+
+export const couponsApi = { validate, available };

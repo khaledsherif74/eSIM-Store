@@ -25,6 +25,7 @@ import { TopUpModal } from "../components/profile/TopUpModal.jsx";
 import { ChangePasswordModal } from "../components/profile/ChangePasswordModal.jsx";
 import { PersonalInfoModal } from "../components/profile/PersonalInfoModal.jsx";
 import { useLanguage } from "../i18n/LanguageContext.jsx";
+import { LANGUAGES } from "../i18n/languages.js";
 
 import "./ProfilePage.css";
 import hero from "../public/images/hero.png";
@@ -378,8 +379,11 @@ export const ProfilePage = () => {
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
               >
-                <option value="en">English</option>
-                <option value="ar">Arabic</option>
+                {LANGUAGES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {l.nativeName}
+                  </option>
+                ))}
               </select>
 
               <ChevronRight size={16} />

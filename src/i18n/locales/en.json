@@ -362,8 +362,6 @@
     "eyebrow": "Support",
     "title": "How can we help?",
     "subtitle": "Find your order, install your eSIM, troubleshoot connectivity or learn how usage and top-ups work.",
-    "lookup_title": "Open your eSIM",
-    "lookup_desc": "Use the order ID from your payment confirmation to access its installation and usage information.",
     "usage_title": "Usage & top-ups",
     "usage_desc": "Open an eSIM to check usage and, where the operator supports it, select a compatible top-up.",
     "manage_esims": "Manage eSIMs",

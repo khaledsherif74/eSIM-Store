@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { PlanCard } from "../plans/PlanCard.jsx";
 import { countryName } from "../../utils/countries.js";
 import { Flag } from "../ui/Flag.jsx";
+import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import "./NoFullCoverageHelper.css";
 
 export function NoFullCoverageHelper({
@@ -11,6 +12,7 @@ export function NoFullCoverageHelper({
   onOpenPlan,
 }) {
   const { t } = useTranslation();
+  const { language } = useLanguage();
 
   return (
     <div className="no-full-coverage">
@@ -27,7 +29,7 @@ export function NoFullCoverageHelper({
           <div key={plan.productId} className="no-full-coverage-option">
             <span className="no-full-coverage-option-label">
               {t("NoFullCoverageHelper.option")} {i + 1} —{" "}
-              {coveredCountries.map((c) => countryName(c)).join(", ")}
+              {coveredCountries.map((c) => countryName(c, language)).join(", ")}
             </span>
             <PlanCard plan={plan} onOpen={onOpenPlan} />
           </div>
@@ -42,7 +44,7 @@ export function NoFullCoverageHelper({
             <span className="no-full-coverage-gap-list">
               {uncoveredCountries.map((c, i) => (
                 <span key={c}>
-                  <Flag code={c} size={14} /> {countryName(c)}
+                  <Flag code={c} size={14} /> {countryName(c, language)}
                   {i < uncoveredCountries.length - 1 ? ", " : ""}
                 </span>
               ))}

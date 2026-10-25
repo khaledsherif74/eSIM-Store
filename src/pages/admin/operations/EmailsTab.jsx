@@ -4,10 +4,23 @@ import { Card } from "../../../components/ui/Card.jsx";
 import { Button } from "../../../components/ui/Button.jsx";
 import { Badge } from "../../../components/ui/Badge.jsx";
 import { adminApi } from "../../../services/adminApi.js";
-import { Empty, Num, StateBox, errorText, useAsync } from "../../../components/admin/finance/financeUtils.jsx";
+import {
+  Empty,
+  Num,
+  StateBox,
+  errorText,
+  useAsync,
+} from "../../../components/admin/finance/financeUtils.jsx";
 
 const TONE = { Sent: "success", Failed: "danger", Skipped: "warning" };
-const TYPES = ["welcome", "order_access", "esim_ready", "password_reset", "admin_reset"];
+const TYPES = [
+  "welcome",
+  "order_access",
+  "esim_ready",
+  "password_reset",
+  "admin_reset",
+  "admin_low_balance",
+];
 
 export function EmailsTab() {
   const { t } = useTranslation();
@@ -31,7 +44,7 @@ export function EmailsTab() {
   };
 
   async function resend(row) {
-    if (!window.confirm(t("admin.ops.resend_confirm"))) return;
+    if (!window.confirm(t("admin.ops.resend_confirm_any"))) return;
     setBusy(row.id);
     setMsg({ type: "", text: "" });
     try {
@@ -50,24 +63,58 @@ export function EmailsTab() {
       <div className="fin-toolbar">
         <label className="fin-field">
           <span>{t("admin.finance.search")}</span>
-          <input value={q} maxLength={100} placeholder={t("admin.ops.email_search_hint")} onChange={(e) => setQ(e.target.value)} onBlur={commit} onKeyDown={(e) => e.key === "Enter" && commit()} />
+          <input
+            value={q}
+            maxLength={100}
+            placeholder={t("admin.ops.email_search_hint")}
+            onChange={(e) => setQ(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => e.key === "Enter" && commit()}
+          />
         </label>
         <label className="fin-field">
           <span>{t("admin.finance.f_status")}</span>
-          <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }}>
+          <select
+            value={status}
+            onChange={(e) => {
+              setStatus(e.target.value);
+              setPage(1);
+            }}
+          >
             <option value="">{t("admin.finance.all")}</option>
-            {Object.keys(TONE).map((s) => <option key={s} value={s}>{t(`admin.ops.mail_${s}`)}</option>)}
+            {Object.keys(TONE).map((s) => (
+              <option key={s} value={s}>
+                {t(`admin.ops.mail_${s}`)}
+              </option>
+            ))}
           </select>
         </label>
         <label className="fin-field">
           <span>{t("admin.users.type")}</span>
-          <select value={type} onChange={(e) => { setType(e.target.value); setPage(1); }}>
+          <select
+            value={type}
+            onChange={(e) => {
+              setType(e.target.value);
+              setPage(1);
+            }}
+          >
             <option value="">{t("admin.finance.all")}</option>
-            {TYPES.map((x) => <option key={x} value={x}>{t(`admin.ops.mailtype_${x}`)}</option>)}
+            {TYPES.map((x) => (
+              <option key={x} value={x}>
+                {t(`admin.ops.mailtype_${x}`)}
+              </option>
+            ))}
           </select>
         </label>
       </div>
-      {msg.text && <p className={msg.type === "err" ? "fin-form-error" : "fin-note"} role={msg.type === "err" ? "alert" : "status"}>{msg.text}</p>}
+      {msg.text && (
+        <p
+          className={msg.type === "err" ? "fin-form-error" : "fin-note"}
+          role={msg.type === "err" ? "alert" : "status"}
+        >
+          {msg.text}
+        </p>
+      )}
       <Card padded={false}>
         <StateBox loading={loading} error={error} onRetry={reload}>
           {data && data.items.length === 0 ? (
@@ -90,17 +137,30 @@ export function EmailsTab() {
                     <tbody>
                       {data.items.map((m) => (
                         <tr key={m.id}>
-                          <td><Num>{new Date(m.at).toLocaleString()}</Num></td>
+                          <td>
+                            <Num>{new Date(m.at).toLocaleString()}</Num>
+                          </td>
                           <td dir="ltr">{m.to}</td>
                           <td>{t(`admin.ops.mailtype_${m.type}`, m.type)}</td>
                           <td>
-                            <Badge tone={TONE[m.status] || "neutral"}>{t(`admin.ops.mail_${m.status}`)}</Badge>
-                            {m.error && <span className="fin-sub">{m.error}</span>}
+                            <Badge tone={TONE[m.status] || "neutral"}>
+                              {t(`admin.ops.mail_${m.status}`)}
+                            </Badge>
+                            {m.error && (
+                              <span className="fin-sub">{m.error}</span>
+                            )}
                           </td>
                           <td className="mono">{m.orderId || "—"}</td>
                           <td>
                             {m.resendable && (
-                              <Button size="sm" variant="secondary" disabled={busy === m.id} onClick={() => resend(m)}>{t("admin.ops.resend")}</Button>
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                disabled={busy === m.id}
+                                onClick={() => resend(m)}
+                              >
+                                {t("admin.ops.resend")}
+                              </Button>
                             )}
                           </td>
                         </tr>
@@ -109,9 +169,23 @@ export function EmailsTab() {
                   </table>
                 </div>
                 <div className="admin-pagination">
-                  <Button variant="secondary" size="sm" disabled={page <= 1} onClick={() => setPage((x) => x - 1)}>{t("admin.previous")}</Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={page <= 1}
+                    onClick={() => setPage((x) => x - 1)}
+                  >
+                    {t("admin.previous")}
+                  </Button>
                   <span>{t("admin.page_of", { page, total: pages })}</span>
-                  <Button variant="secondary" size="sm" disabled={page >= pages} onClick={() => setPage((x) => x + 1)}>{t("admin.next")}</Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={page >= pages}
+                    onClick={() => setPage((x) => x + 1)}
+                  >
+                    {t("admin.next")}
+                  </Button>
                 </div>
               </>
             )

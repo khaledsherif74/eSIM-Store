@@ -3,6 +3,7 @@ import { X, Eye, EyeOff } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button.jsx";
 import { authApi } from "../../services/authApi.js";
+import { useAuth } from "../../hooks/useAuth.jsx";
 import "./AccountModals.css";
 
 const MIN_LENGTH = 8;
@@ -10,6 +11,11 @@ const MAX_LENGTH = 72;
 
 export function ChangePasswordModal({ onClose }) {
   const { t } = useTranslation();
+  const { user, refresh } = useAuth();
+  // Google/Apple accounts have no password yet: they set one without a
+  // "current password".
+  const hasPassword = user?.hasPassword !== false;
+
   const [form, setForm] = useState({
     oldPassword: "",
     newPassword: "",
@@ -30,7 +36,7 @@ export function ChangePasswordModal({ onClose }) {
     setForm((f) => ({ ...f, [field]: e.target.value }));
 
   function validate() {
-    if (!form.oldPassword)
+    if (hasPassword && !form.oldPassword)
       return t("profile.err_current_required", "Enter your current password");
     if (form.newPassword.length < MIN_LENGTH)
       return t(
@@ -42,7 +48,7 @@ export function ChangePasswordModal({ onClose }) {
         "profile.err_password_long",
         "New password must be at most 72 characters",
       );
-    if (form.newPassword === form.oldPassword)
+    if (hasPassword && form.newPassword === form.oldPassword)
       return t(
         "profile.err_password_same",
         "New password must be different from the current one",
@@ -64,9 +70,10 @@ export function ChangePasswordModal({ onClose }) {
     setError(null);
     try {
       await authApi.changePassword({
-        oldPassword: form.oldPassword,
+        ...(hasPassword ? { oldPassword: form.oldPassword } : {}),
         newPassword: form.newPassword,
       });
+      await refresh();
       setSuccess(true);
       setTimeout(onClose, 1400);
     } catch (err) {
@@ -126,23 +133,31 @@ export function ChangePasswordModal({ onClose }) {
           <X size={18} />
         </button>
         <h2 id="change-password-title">
-          {t("profile.change_password", "Change Password")}
+          {hasPassword
+            ? t("profile.change_password", "Change Password")
+            : t("profile.set_password", "Set a password")}
         </h2>
         <p className="acct-modal-subtitle">
-          {t(
-            "profile.change_password_sub",
-            "Enter your current password, then choose a new one.",
-          )}
+          {hasPassword
+            ? t(
+                "profile.change_password_sub",
+                "Enter your current password, then choose a new one.",
+              )
+            : t(
+                "profile.set_password_sub",
+                "You signed in with Google or Apple, so your account has no password yet.",
+              )}
         </p>
 
         <form className="acct-form" onSubmit={handleSubmit} noValidate>
-          {field(
-            "cp-old",
-            t("profile.current_password", "Current password"),
-            form.oldPassword,
-            update("oldPassword"),
-            "current-password",
-          )}
+          {hasPassword &&
+            field(
+              "cp-old",
+              t("profile.current_password", "Current password"),
+              form.oldPassword,
+              update("oldPassword"),
+              "current-password",
+            )}
           {field(
             "cp-new",
             t("profile.new_password", "New password"),
@@ -168,7 +183,9 @@ export function ChangePasswordModal({ onClose }) {
           )}
           {success && (
             <div className="acct-success" role="status">
-              {t("profile.password_changed", "Password changed successfully.")}
+              {hasPassword
+                ? t("profile.password_changed", "Password changed successfully.")
+                : t("profile.password_set", "Password set successfully.")}
             </div>
           )}
 
@@ -179,7 +196,9 @@ export function ChangePasswordModal({ onClose }) {
             <Button type="submit" disabled={submitting || success}>
               {submitting
                 ? t("common.loading", "Loading…")
-                : t("profile.update_password", "Update password")}
+                : hasPassword
+                  ? t("profile.update_password", "Update password")
+                  : t("profile.set_password", "Set a password")}
             </Button>
           </div>
         </form>

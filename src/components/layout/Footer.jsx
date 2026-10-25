@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ShieldCheck, Smartphone, Languages, ChevronDown } from "lucide-react";
+import { ShieldCheck, Smartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../i18n/LanguageContext.jsx";
+import { LANGUAGES } from "../../i18n/languages.js";
 import "./Footer.css";
 
 export function Footer() {
@@ -23,16 +24,30 @@ export function Footer() {
           <Link to="/my-esims">
             <Smartphone size={14} /> {t("footer.my_esims")}
           </Link>
-          <button
-            type="button"
-            className="footer-lang-toggle"
-            onClick={() => setLanguage(language === "en" ? "ar" : "en")}
-            aria-label="Switch language"
-          >
-            <Languages size={14} />
-            {t("footer.language")}
-            <ChevronDown size={14} />
-          </button>
+          <label className="footer-lang-toggle" style={{ cursor: "pointer" }}>
+            <span>{t("footer.language")}</span>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              aria-label="Switch language"
+              style={{
+                background: "transparent",
+                border: 0,
+                color: "inherit",
+                font: "inherit",
+                fontWeight: 700,
+                cursor: "pointer",
+                paddingInlineStart: 4,
+                outline: "none",
+              }}
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code} style={{ color: "#000" }}>
+                  {l.nativeName}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <div className="footer-links">
           <Link to="/installation">{t("footer.installation")}</Link>

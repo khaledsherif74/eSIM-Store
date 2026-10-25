@@ -87,6 +87,16 @@ export const adminApi = {
       `/api/admin/orders/${encodeURIComponent(orderId)}/resend-email`,
       {},
     ),
+  revealOrderAccessToken: (orderId) =>
+    apiClient.post(
+      `/api/admin/orders/${encodeURIComponent(orderId)}/access-token`,
+      {},
+    ),
+  resendOrderAccessEmail: (orderId) =>
+    apiClient.post(
+      `/api/admin/orders/${encodeURIComponent(orderId)}/resend-access-email`,
+      {},
+    ),
   listPayments: (params) => apiClient.get(`/api/admin/payments${qs(params)}`),
   listEmails: (params) => apiClient.get(`/api/admin/emails${qs(params)}`),
   resendEmail: (id) =>
@@ -142,6 +152,10 @@ export const adminApi = {
   listProducts: (params) => apiClient.get(`/api/admin/products${qs(params)}`),
   updateProduct: (id, body) =>
     apiClient.patch(`/api/admin/products/${encodeURIComponent(id)}`, body),
+  getProductPriceHistory: (productId, params) =>
+    apiClient.get(
+      `/api/admin/products/${encodeURIComponent(productId)}/price-history${qs(params)}`,
+    ),
   listPricingRules: () => apiClient.get("/api/admin/pricing/rules"),
   createPricingRule: (body) => apiClient.post("/api/admin/pricing/rules", body),
   updatePricingRule: (id, body) =>

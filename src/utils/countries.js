@@ -1,17 +1,32 @@
-const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
-const nameCache = new Map();
+const namesCache = new Map();
 
-export function countryName(code) {
+function namesFor(language) {
+  const key = language || "en";
+  if (namesCache.has(key)) return namesCache.get(key);
+  let regionNames;
+  try {
+    regionNames = new Intl.DisplayNames([key], { type: "region" });
+  } catch {
+    regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+  }
+  namesCache.set(key, regionNames);
+  return regionNames;
+}
+
+const countryNamesCache = new Map();
+
+export function countryName(code, language = "en") {
   if (!code) return "";
-  const key = code.toUpperCase();
-  if (nameCache.has(key)) return nameCache.get(key);
+  const up = code.toUpperCase();
+  const cacheKey = `${language}:${up}`;
+  if (countryNamesCache.has(cacheKey)) return countryNamesCache.get(cacheKey);
   let name;
   try {
-    name = regionNames.of(key) || code;
+    name = namesFor(language).of(up) || code;
   } catch {
     name = code;
   }
-  nameCache.set(key, name);
+  countryNamesCache.set(cacheKey, name);
   return name;
 }
 
@@ -28,7 +43,7 @@ export function flagImageUrl(code, width = 80) {
   return `https://flagcdn.com/w${width}/${code.toLowerCase()}.png`;
 }
 
-export function buildCountryIndexWithCounts(products) {
+export function buildCountryIndexWithCounts(products, language = "en") {
   const counts = new Map();
   for (const p of products) {
     for (const c of p.countries || []) {
@@ -38,7 +53,7 @@ export function buildCountryIndexWithCounts(products) {
   return [...counts.entries()]
     .map(([code, planCount]) => ({
       code,
-      name: countryName(code),
+      name: countryName(code, language),
       flag: flagEmoji(code),
       flagUrl: flagImageUrl(code),
       planCount,
@@ -46,7 +61,7 @@ export function buildCountryIndexWithCounts(products) {
     .sort((a, b) => b.planCount - a.planCount);
 }
 
-export function buildCountryIndex(products) {
+export function buildCountryIndex(products, language = "en") {
   const set = new Set();
   for (const p of products) {
     for (const c of p.countries || []) set.add(c);
@@ -54,7 +69,7 @@ export function buildCountryIndex(products) {
   return [...set]
     .map((code) => ({
       code,
-      name: countryName(code),
+      name: countryName(code, language),
       flag: flagEmoji(code),
       flagUrl: flagImageUrl(code),
     }))

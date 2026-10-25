@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "/api/index"
+      "destination": "https://esim-store.runasp.net/api/:path*"
     },
     {
       "source": "/((?!api/).*)",

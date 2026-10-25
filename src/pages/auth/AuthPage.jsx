@@ -1,7 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Mail, Lock, User, Gift, Eye, EyeOff } from "lucide-react";
+import {
+  Mail,
+  Lock,
+  User,
+  Gift,
+  Eye,
+  EyeOff,
+  AlertTriangle,
+  Globe,
+  Zap,
+  ShieldCheck,
+} from "lucide-react";
 
 import { GoogleLoginButton } from "../../components/auth/GoogleLoginButton";
 import { AppleLoginButton } from "../../components/auth/AppleLoginButton";
@@ -11,15 +22,22 @@ import { Button } from "../../components/ui/Button.jsx";
 import { Spinner } from "../../components/ui/Spinner.jsx";
 import { authApi } from "../../services/authApi.js";
 import { useAuth } from "../../hooks/useAuth.jsx";
+import { useAdBlockDetector } from "../../hooks/useAdBlockDetector.js";
 
 import "./AuthPage.css";
 import bgAuth from "../../public/images/bgAuth.jpg";
+
+const DISMISS_KEY = "auth_adblock_banner_dismissed";
 
 export function AuthPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const { refresh } = useAuth();
   const { t } = useTranslation();
+  const { blocked: adBlocked } = useAdBlockDetector();
+  const [dismissed, setDismissed] = useState(
+    () => sessionStorage.getItem(DISMISS_KEY) === "1",
+  );
 
   const refFromLink = params.get("ref") || "";
 
@@ -44,9 +62,15 @@ export function AuthPage() {
     referralCode: refFromLink,
   });
 
+  const showAdBlockWarning = adBlocked && !dismissed;
+
+  function dismissAdBlockWarning() {
+    sessionStorage.setItem(DISMISS_KEY, "1");
+    setDismissed(true);
+  }
+
   async function handleLogin(e) {
     e.preventDefault();
-
     setLoading(true);
     setError(null);
     setReferralNotice(null);
@@ -64,14 +88,12 @@ export function AuthPage() {
 
   async function handleSignup(e) {
     e.preventDefault();
-
     setLoading(true);
     setError(null);
     setReferralNotice(null);
 
     try {
       const result = await authApi.signup(signupData);
-
       await refresh();
 
       if (signupData.referralCode) {
@@ -80,7 +102,6 @@ export function AuthPage() {
             ? "Referral code applied — thanks for joining through a friend!"
             : "That referral code wasn't recognized, but your account was still created.",
         );
-
         setTimeout(() => navigate("/"), 1800);
       } else {
         navigate("/");
@@ -98,6 +119,28 @@ export function AuthPage() {
     setReferralNotice(null);
   }
 
+  const adBlockBanner = showAdBlockWarning ? (
+    <div className="auth-adblock-banner" role="alert">
+      <AlertTriangle size={18} className="auth-adblock-icon" />
+      <div className="auth-adblock-text">
+        <strong>{t("auth.adblock_warning_title")}</strong>
+        <p>{t("auth.adblock_warning_body")}</p>
+      </div>
+      <button
+        type="button"
+        className="auth-adblock-dismiss"
+        onClick={dismissAdBlockWarning}
+        aria-label={t("common.cancel", "Dismiss")}
+      >
+        ×
+      </button>
+    </div>
+  ) : null;
+
+  const socialTroubleHint = adBlocked ? (
+    <p className="auth-social-hint">{t("auth.social_trouble_hint")}</p>
+  ) : null;
+
   return (
     <div className="auth-page-container">
       <div
@@ -112,26 +155,34 @@ export function AuthPage() {
           <h1>
             {t("auth.hero_title_1")} {t("auth.hero_title_2")}
           </h1>
-
           <p>{t("auth.hero_subtitle")}</p>
 
           <div className="auth-hero-badges">
             <div className="auth-hero-badge">
-              <span className="auth-hero-badge-icon">🌍</span>
-
-              <span>{t("auth.hero_badge_countries")}</span>
+              <div className="auth-hero-badge-icon">
+                <Globe size={22} color="#12b3a0" strokeWidth={2.5} />
+              </div>
+              <span className="auth-hero-badge-label">
+                {t("auth.hero_badge_countries")}
+              </span>
             </div>
 
             <div className="auth-hero-badge">
-              <span className="auth-hero-badge-icon">⚡</span>
-
-              <span>{t("auth.hero_badge_instant")}</span>
+              <div className="auth-hero-badge-icon">
+                <Zap size={22} color="#2f5fed" strokeWidth={2.5} />
+              </div>
+              <span className="auth-hero-badge-label">
+                {t("auth.hero_badge_instant")}
+              </span>
             </div>
 
             <div className="auth-hero-badge">
-              <span className="auth-hero-badge-icon">🛡️</span>
-
-              <span>{t("auth.hero_badge_secure")}</span>
+              <div className="auth-hero-badge-icon">
+                <ShieldCheck size={22} color="#2f5fed" strokeWidth={2.5} />
+              </div>
+              <span className="auth-hero-badge-label">
+                {t("auth.hero_badge_secure")}
+              </span>
             </div>
           </div>
         </div>
@@ -139,12 +190,13 @@ export function AuthPage() {
 
       <div className="auth-form-section">
         <Card className="auth-card">
+          {adBlockBanner}
+
           <div className="auth-tabs" role="tablist">
             <span
               className={`auth-tabs-thumb${tab === "signup" ? " right" : ""}`}
               aria-hidden="true"
             />
-
             <button
               type="button"
               role="tab"
@@ -154,7 +206,6 @@ export function AuthPage() {
             >
               {t("auth.login_tab")}
             </button>
-
             <button
               type="button"
               role="tab"
@@ -170,17 +221,14 @@ export function AuthPage() {
             <>
               <div className="auth-card-header">
                 <h1>{t("auth.welcome_back")}</h1>
-
                 <p>{t("auth.login_subtitle")}</p>
               </div>
 
               <form onSubmit={handleLogin} className="auth-form">
                 <div className="form-group">
                   <label>{t("auth.email_label")}</label>
-
                   <div className="input-icon-wrap">
                     <Mail size={16} className="input-icon" />
-
                     <input
                       type="email"
                       required
@@ -198,10 +246,8 @@ export function AuthPage() {
 
                 <div className="form-group">
                   <label>{t("auth.password_label")}</label>
-
                   <div className="input-icon-wrap">
                     <Lock size={16} className="input-icon" />
-
                     <input
                       type={showPassword ? "text" : "password"}
                       required
@@ -214,11 +260,10 @@ export function AuthPage() {
                       }
                       placeholder={t("auth.password_placeholder")}
                     />
-
                     <button
                       type="button"
                       className="input-icon-toggle"
-                      onClick={() => setShowPassword((value) => !value)}
+                      onClick={() => setShowPassword((v) => !v)}
                       aria-label={t("auth.password_toggle_aria")}
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -249,27 +294,26 @@ export function AuthPage() {
                   </button>
                 </p>
               </form>
-              <div className="social-divider">Or continue with</div>
+
+              <div className="social-divider">{t("auth.continue_with")}</div>
               <div className="social-login-container">
                 <GoogleLoginButton />
                 <AppleLoginButton />
               </div>
+              {socialTroubleHint}
             </>
           ) : (
             <>
               <div className="auth-card-header">
                 <h1>{t("auth.create_account")}</h1>
-
                 <p>{t("auth.signup_subtitle")}</p>
               </div>
 
               <form onSubmit={handleSignup} className="auth-form">
                 <div className="form-group">
                   <label>{t("auth.full_name_label")}</label>
-
                   <div className="input-icon-wrap">
                     <User size={16} className="input-icon" />
-
                     <input
                       type="text"
                       required
@@ -287,10 +331,8 @@ export function AuthPage() {
 
                 <div className="form-group">
                   <label>{t("auth.email_label")}</label>
-
                   <div className="input-icon-wrap">
                     <Mail size={16} className="input-icon" />
-
                     <input
                       type="email"
                       required
@@ -308,10 +350,8 @@ export function AuthPage() {
 
                 <div className="form-group">
                   <label>{t("auth.password_label")}</label>
-
                   <div className="input-icon-wrap">
                     <Lock size={16} className="input-icon" />
-
                     <input
                       type={showPassword ? "text" : "password"}
                       required
@@ -324,11 +364,10 @@ export function AuthPage() {
                       }
                       placeholder={t("auth.password_placeholder")}
                     />
-
                     <button
                       type="button"
                       className="input-icon-toggle"
-                      onClick={() => setShowPassword((value) => !value)}
+                      onClick={() => setShowPassword((v) => !v)}
                       aria-label={t("auth.password_toggle_aria")}
                     >
                       {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -338,10 +377,8 @@ export function AuthPage() {
 
                 <div className="form-group">
                   <label>{t("auth.referral_label")}</label>
-
                   <div className="input-icon-wrap">
                     <Gift size={16} className="input-icon" />
-
                     <input
                       type="text"
                       value={signupData.referralCode}
@@ -355,7 +392,6 @@ export function AuthPage() {
                       readOnly={!!refFromLink}
                     />
                   </div>
-
                   {refFromLink && (
                     <span className="auth-hint">{t("auth.referral_hint")}</span>
                   )}
@@ -382,11 +418,13 @@ export function AuthPage() {
                   </button>
                 </p>
               </form>
-              <div className="social-divider">Or continue with</div>
+
+              <div className="social-divider">{t("auth.continue_with")}</div>
               <div className="social-login-container">
                 <GoogleLoginButton />
                 <AppleLoginButton />
               </div>
+              {socialTroubleHint}
             </>
           )}
         </Card>

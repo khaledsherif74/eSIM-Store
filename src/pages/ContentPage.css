@@ -60,6 +60,34 @@
 .info-card p {
   margin-top: 3px;
 }
+.help-reopen-card {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  border-color: var(--color-primary-soft);
+}
+.help-reopen-card > svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.help-reopen-card h2 {
+  font-size: var(--text-lg);
+  margin: 0 0 4px;
+}
+.help-reopen-card p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.55;
+  margin: 0 0 var(--space-3);
+}
+.help-reopen-card .help-reopen-fallback {
+  color: var(--color-text-faint);
+  margin: 0;
+}
+.help-reopen-cta {
+  display: inline-block;
+}
 .content-actions {
   display: flex;
   gap: var(--space-3);

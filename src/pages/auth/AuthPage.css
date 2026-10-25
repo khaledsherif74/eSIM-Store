@@ -47,27 +47,35 @@
 
 .auth-hero-content p {
   font-size: var(--text-lg);
-  margin-bottom: var(--space-10);
+  margin-bottom: var(--space-8);
   opacity: 0.92;
   color: #fff;
 }
 
 .auth-hero-badges {
   display: flex;
-  gap: 12px;
+  gap: 32px;
   justify-content: center;
   flex-wrap: wrap;
+  margin-top: var(--space-4);
 }
 
 .auth-hero-badge {
-  background: rgba(9, 25, 48, 0.68);
-  padding: 12px 18px;
-  border-radius: 14px;
-  font-size: var(--text-sm);
-  font-weight: 600;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  text-align: center;
+}
+
+.auth-hero-badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: rgba(9, 25, 48, 0.68);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
   transition:
@@ -76,17 +84,19 @@
     border-color 0.2s ease;
 }
 
-.auth-hero-badge:hover {
+.auth-hero-badge:hover .auth-hero-badge-icon {
   transform: translateY(-3px);
   background: rgba(9, 25, 48, 0.82);
   border-color: rgba(255, 255, 255, 0.32);
 }
 
-.auth-hero-badge-icon {
-  font-size: 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.auth-hero-badge-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  max-width: 100px;
+  line-height: 1.2;
 }
 
 .auth-form-section {
@@ -300,20 +310,13 @@
   color: var(--color-primary);
 }
 
-.social-login-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
-}
-
 .social-divider {
   display: flex;
   align-items: center;
   text-align: center;
   color: var(--color-text-faint);
   font-size: var(--text-xs);
-  margin: var(--space-4) 0;
+  margin: var(--space-5) 0 var(--space-4);
 }
 
 .social-divider::before,
@@ -331,35 +334,223 @@
   margin-inline-start: var(--space-3);
 }
 
+.social-login-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: var(--space-2);
+}
+
 .social-btn {
-  width: 100%;
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border-radius: var(--radius-lg);
-  font-size: var(--text-sm);
-  font-weight: 600;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+  padding: 0;
 }
 
-.social-btn:hover {
-  opacity: 0.9;
+.social-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .social-btn-apple {
-  background-color: #000000;
-  color: #ffffff;
-  border: 1px solid #000000;
+  background-color: #ffffff;
+  color: #000000;
+  border: 1px solid #dadce0;
+}
+
+.social-btn-apple:hover:not(:disabled) {
+  background-color: #f8f9fa;
+}
+
+/* Google sign-in icon button.
+   The Google-rendered iframe continues to handle authentication, but its own
+   visual is transparent so the official multicolor G remains visible if the
+   embedded button's logo fails to paint in the browser. */
+.social-google-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid #dadce0;
+  border-radius: 50%;
+  background: #fff;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.social-google-button:hover {
+  background: #f8f9fa;
+  border-color: #c8cdd3;
+}
+
+.social-google-button:focus-within {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Keep the fallback SVG visible even if global icon styles target SVGs/paths. */
+html body .auth-page-container .social-google-button > .social-google-logo {
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  flex: 0 0 20px !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+.social-google-logo .google-logo-blue {
+  fill: #4285f4 !important;
+}
+.social-google-logo .google-logo-green {
+  fill: #34a853 !important;
+}
+.social-google-logo .google-logo-yellow {
+  fill: #fbbc05 !important;
+}
+.social-google-logo .google-logo-red {
+  fill: #ea4335 !important;
 }
 
 .social-google-slot {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
   width: 100%;
-  min-height: 40px;
+  height: 100%;
+  overflow: hidden;
+  background: transparent !important;
+}
+
+/* The real Google iframe handles clicks; its visual is transparent so it
+   cannot cover the visible multicolour fallback logo or draw a second ring. */
+html
+  body
+  .auth-page-container
+  .social-google-button
+  .social-google-slot
+  iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  opacity: 0 !important;
+}
+
+.social-fallback-hint {
+  margin: var(--space-3) 0 0;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* ---- Ad-blocker warning banner ---- */
+
+.auth-adblock-banner {
   display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: 12px 14px;
+  margin-bottom: var(--space-4);
+  background: var(--color-warning-soft);
+  border: 1px solid var(--color-warning);
+  border-radius: var(--radius-md);
+  text-align: start;
+  position: relative;
+}
+
+.auth-adblock-icon {
+  color: var(--color-warning);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.auth-adblock-text {
+  flex: 1;
+  min-width: 0;
+  padding-inline-end: var(--space-4);
+}
+
+.auth-adblock-text strong {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: #8a5f16;
+  margin-bottom: 3px;
+}
+
+.auth-adblock-text p {
+  margin: 0;
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: #7a5410;
+}
+
+.auth-adblock-dismiss {
+  position: absolute;
+  top: 6px;
+  inset-inline-end: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  background: transparent;
+  border: 0;
+  color: #8a5f16;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+  opacity: 0.65;
+}
+
+.auth-adblock-dismiss:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.auth-social-hint {
+  margin: var(--space-3) 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.5;
 }
 
 @media (max-width: 900px) {
@@ -392,13 +583,17 @@
   }
 
   .auth-hero-badges {
-    gap: 8px;
+    gap: 16px;
   }
 
-  .auth-hero-badge {
-    padding: 10px 14px;
-    font-size: 12px;
+  .auth-hero-badge-icon {
+    width: 48px;
+    height: 48px;
     border-radius: 12px;
+  }
+
+  .auth-hero-badge-label {
+    font-size: 12px;
   }
 
   .auth-form-section {

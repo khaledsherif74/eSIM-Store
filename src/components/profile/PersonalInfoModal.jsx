@@ -6,13 +6,10 @@ import { authApi } from "../../services/authApi.js";
 import { useAuth } from "../../hooks/useAuth.jsx";
 import "./AccountModals.css";
 
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
 export function PersonalInfoModal({ user, onClose }) {
   const { t } = useTranslation();
   const { refresh } = useAuth();
   const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -28,25 +25,14 @@ export function PersonalInfoModal({ user, onClose }) {
     if (submitting || success) return;
 
     const trimmedName = name.trim();
-    const trimmedEmail = email.trim().toLowerCase();
-
     if (!trimmedName)
       return setError(t("profile.err_name_required", "Name can't be empty"));
-    if (!EMAIL_RE.test(trimmedEmail))
-      return setError(
-        t("profile.err_email_invalid", "Enter a valid email address"),
-      );
-
-    const changes = {};
-    if (trimmedName !== (user?.name || "")) changes.name = trimmedName;
-    if (trimmedEmail !== (user?.email || "").toLowerCase())
-      changes.email = trimmedEmail;
-    if (Object.keys(changes).length === 0) return onClose();
+    if (trimmedName === (user?.name || "")) return onClose();
 
     setSubmitting(true);
     setError(null);
     try {
-      await authApi.updateProfile(changes);
+      await authApi.updateProfile({ name: trimmedName });
       await refresh();
       setSuccess(true);
       setTimeout(onClose, 1000);
@@ -83,7 +69,7 @@ export function PersonalInfoModal({ user, onClose }) {
         <p className="acct-modal-subtitle">
           {t(
             "profile.personal_info_sub",
-            "Update the name and email on your account.",
+            "Update your name. Your email can't be changed.",
           )}
         </p>
 
@@ -106,11 +92,14 @@ export function PersonalInfoModal({ user, onClose }) {
             <input
               id="pi-email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-              disabled={submitting || success}
+              value={user?.email || "—"}
+              readOnly
+              disabled
+              dir="ltr"
             />
+            <span className="acct-hint">
+              {t("profile.email_readonly_note", "Email can't be changed here.")}
+            </span>
           </label>
 
           {error && (

@@ -46,6 +46,7 @@ import {
   capabilityClass,
 } from "../utils/productCapabilities.js";
 import { countryName } from "../utils/countries.js";
+import { useLanguage } from "../i18n/LanguageContext.jsx";
 import "./EsimDetailsPage.css";
 
 function Detail({ label, value, copyable = false }) {
@@ -81,6 +82,7 @@ const Cap = ({ icon: Icon, label, value }) => (
 
 export function EsimDetailsPage() {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const { orderId } = useParams();
   const [params] = useSearchParams();
   const { products } = useProducts();
@@ -275,7 +277,7 @@ export function EsimDetailsPage() {
           <div className="coverage-chip-grid">
             {(product?.countries || []).map((c) => (
               <Badge key={c}>
-                <Flag code={c} size={14} /> {countryName(c)}
+                <Flag code={c} size={14} /> {countryName(c, language)}
               </Badge>
             ))}
           </div>

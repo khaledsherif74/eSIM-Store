@@ -14,6 +14,7 @@ import { Spinner } from "../ui/Spinner.jsx";
 import { AdminBottomNav } from "../layout/AdminBottomNav.jsx";
 import { adminApi } from "../../services/adminApi.js";
 import { useLanguage } from "../../i18n/LanguageContext.jsx";
+import { LANGUAGES } from "../../i18n/languages.js";
 import { useAdminSession } from "./AdminSessionContext.jsx";
 import "./admin-tokens.css";
 import "./AdminShell.css";
@@ -222,15 +223,34 @@ export function AdminShell({ brand, navItems, search, extra }) {
         {search && <GlobalSearch config={search} />}
         <div className="ash-top-right">
           {extra}
-          <button
-            type="button"
+          <label
             className="ash-chip"
-            aria-label="Toggle language"
-            onClick={() => setLanguage(language === "en" ? "ar" : "en")}
+            style={{ cursor: "pointer", gap: 6 }}
+            title="Language"
           >
             <Languages size={16} />
-            <span>{language === "en" ? "العربية" : "English"}</span>
-          </button>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              aria-label="Switch language"
+              style={{
+                background: "transparent",
+                border: 0,
+                color: "inherit",
+                font: "inherit",
+                fontWeight: 700,
+                cursor: "pointer",
+                outline: "none",
+                paddingInlineEnd: 4,
+              }}
+            >
+              {LANGUAGES.map((l) => (
+                <option key={l.code} value={l.code} style={{ color: "#000" }}>
+                  {l.nativeName}
+                </option>
+              ))}
+            </select>
+          </label>
           <div className="ash-user">
             <strong>{session.username}</strong>
             <span>{t(`admin.finance.role_${session.role}`, session.role)}</span>

@@ -153,6 +153,18 @@
   gap: var(--space-2);
   font-size: var(--text-sm);
 }
+.fin-bar-row--clickable {
+  cursor: pointer;
+  padding: 6px 8px;
+  margin-inline: -8px;
+  border-radius: var(--radius-sm);
+  transition: background 150ms ease;
+}
+.fin-bar-row--clickable:hover,
+.fin-bar-row--clickable:focus-visible {
+  background: var(--color-surface-alt);
+  outline: none;
+}
 .fin-bar-label {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -213,8 +225,8 @@
 }
 .fin-form {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--space-5);
 }
 .fin-form-actions {
   grid-column: 1 / -1;

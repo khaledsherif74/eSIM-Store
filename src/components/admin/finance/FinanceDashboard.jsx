@@ -5,6 +5,7 @@ import { Card } from "../../ui/Card.jsx";
 import { Badge } from "../../ui/Badge.jsx";
 import { adminApi } from "../../../services/adminApi.js";
 import { useLanguage } from "../../../i18n/LanguageContext.jsx";
+import { PackageDetailsModal } from "../PackageDetailsModal.jsx";
 import {
   Bars,
   Delta,
@@ -47,9 +48,7 @@ export function FinanceDashboard() {
         {data && (
           <Badge tone={data.locked ? "warning" : "neutral"}>
             {data.locked ? <Lock size={12} /> : <LockOpen size={12} />}{" "}
-            {data.locked
-              ? t("admin.finance.locked")
-              : t("admin.finance.open")}
+            {data.locked ? t("admin.finance.locked") : t("admin.finance.open")}
           </Badge>
         )}
       </div>
@@ -62,6 +61,7 @@ export function FinanceDashboard() {
 }
 
 function DashboardBody({ data, t, language }) {
+  const [selectedPkg, setSelectedPkg] = useState(null);
   const k = data.kpis;
   const profitTone = k.netProfit >= 0 ? "good" : "bad";
   const beRemaining = Math.max(0, k.breakEvenOrders - k.delivered);
@@ -142,9 +142,7 @@ function DashboardBody({ data, t, language }) {
           sub={
             <>
               <Delta value={k.deltas.netProfit} />{" "}
-              {k.netMarginPct !== null && (
-                <Num>{fmtPct(k.netMarginPct)}</Num>
-              )}
+              {k.netMarginPct !== null && <Num>{fmtPct(k.netMarginPct)}</Num>}
             </>
           }
         />
@@ -189,7 +187,9 @@ function DashboardBody({ data, t, language }) {
 
       <div className="fin-grid-2">
         <Card>
-          <h2 className="fin-card-title">{t("admin.finance.sales_profit_3m")}</h2>
+          <h2 className="fin-card-title">
+            {t("admin.finance.sales_profit_3m")}
+          </h2>
           <div className="fin-series">
             {data.series.map((m) => (
               <div key={m.month}>
@@ -231,7 +231,8 @@ function DashboardBody({ data, t, language }) {
             />
           )}
           <p className="fin-note" style={{ marginBlockStart: 12 }}>
-            {t("admin.finance.vs_previous")}: <Num>{fmtEgp(data.previousOpex)}</Num>{" "}
+            {t("admin.finance.vs_previous")}:{" "}
+            <Num>{fmtEgp(data.previousOpex)}</Num>{" "}
             <Delta value={k.deltas.opex} />
           </p>
         </Card>
@@ -265,11 +266,24 @@ function DashboardBody({ data, t, language }) {
                 key: p.productId,
                 label: p.title,
                 value: p.count,
+                onClick: () => setSelectedPkg(p),
               }))}
             />
           )}
+          {data.topPackages.length > 0 && (
+            <p className="fin-note" style={{ marginBlockStart: 8 }}>
+              {t("admin.package_details.click_hint")}
+            </p>
+          )}
         </Card>
       </div>
+
+      {selectedPkg && (
+        <PackageDetailsModal
+          pkg={selectedPkg}
+          onClose={() => setSelectedPkg(null)}
+        />
+      )}
     </>
   );
 }

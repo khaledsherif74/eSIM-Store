@@ -5,6 +5,11 @@ import { Button } from "../../../components/ui/Button.jsx";
 import { Badge } from "../../../components/ui/Badge.jsx";
 import { adminApi } from "../../../services/adminApi.js";
 import {
+  CountrySelect,
+  ProductPicker,
+  ProviderSelect,
+} from "../../../components/admin/EntityPickers.jsx";
+import {
   Empty,
   Kpi,
   Num,
@@ -14,7 +19,7 @@ import {
   fmtNum,
   useAsync,
 } from "../../../components/admin/finance/financeUtils.jsx";
-import { cairoDate, fromList, toList } from "./couponUtils.js";
+import { cairoDate } from "./couponUtils.js";
 
 const blank = () => ({
   code: "",
@@ -22,9 +27,11 @@ const blank = () => ({
   value: "10",
   firstOrderOnly: false,
   overrideFloor: false,
-  productIds: "",
-  countries: "",
-  providerIds: "",
+  showPublicly: false,
+  vipOnly: false,
+  productIds: [],
+  countries: [],
+  providerIds: [],
   startsAt: "",
   endsAt: "",
   maxUsesTotal: "",
@@ -38,9 +45,11 @@ const fromCoupon = (c) => ({
   value: String(c.value),
   firstOrderOnly: c.firstOrderOnly,
   overrideFloor: c.overrideFloor,
-  productIds: fromList(c.productIds),
-  countries: fromList(c.countries),
-  providerIds: fromList(c.providerIds),
+  showPublicly: Boolean(c.showPublicly),
+  vipOnly: Boolean(c.vipOnly),
+  productIds: c.productIds || [],
+  countries: c.countries || [],
+  providerIds: c.providerIds || [],
   startsAt: cairoDate(c.startsAt),
   endsAt: cairoDate(c.endsAt),
   maxUsesTotal: c.maxUsesTotal == null ? "" : String(c.maxUsesTotal),
@@ -54,9 +63,11 @@ const toPayload = (f) => ({
   value: f.value === "" ? "" : Number(f.value),
   firstOrderOnly: f.firstOrderOnly,
   overrideFloor: f.overrideFloor,
-  productIds: toList(f.productIds),
-  countries: toList(f.countries),
-  providerIds: toList(f.providerIds),
+  showPublicly: f.showPublicly,
+  vipOnly: f.vipOnly,
+  productIds: f.productIds,
+  countries: f.countries,
+  providerIds: f.providerIds,
   startsAt: f.startsAt || null,
   endsAt: f.endsAt || null,
   maxUsesTotal: f.maxUsesTotal === "" ? null : Number(f.maxUsesTotal),
@@ -64,12 +75,25 @@ const toPayload = (f) => ({
   active: f.active,
 });
 
+function Check({ checked, onChange, label, hint }) {
+  return (
+    <label className="fin-field" style={{ flexDirection: "row", alignItems: "flex-start", gap: 8 }}>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <span>
+        {label}
+        {hint && <small className="fin-sub">{hint}</small>}
+      </span>
+    </label>
+  );
+}
+
 function CouponForm({ editing, onSaved, onCancel }) {
   const { t } = useTranslation();
   const [f, setF] = useState(editing ? fromCoupon(editing) : blank());
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
-  const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
+  const set = (k) => (e) => setF((x) => ({ ...x, [k]: e.target.value }));
+  const setV = (k) => (v) => setF((x) => ({ ...x, [k]: v }));
 
   async function save() {
     setSaving(true);
@@ -119,30 +143,23 @@ function CouponForm({ editing, onSaved, onCancel }) {
           <span>{t("admin.coupons.max_user")}</span>
           <input type="number" min="1" step="1" value={f.maxUsesPerUser} onChange={set("maxUsesPerUser")} placeholder={t("admin.coupons.unlimited")} />
         </label>
-        <label className="fin-field">
-          <span>{t("admin.coupons.products")}</span>
-          <input dir="ltr" value={f.productIds} onChange={set("productIds")} placeholder={t("admin.coupons.all_hint")} />
-        </label>
-        <label className="fin-field">
-          <span>{t("admin.coupons.countries")}</span>
-          <input dir="ltr" value={f.countries} onChange={set("countries")} placeholder="TR, EG" />
-        </label>
-        <label className="fin-field">
-          <span>{t("admin.coupons.providers")}</span>
-          <input dir="ltr" value={f.providerIds} onChange={set("providerIds")} placeholder={t("admin.coupons.all_hint")} />
-        </label>
-        <label className="fin-field" style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <input type="checkbox" checked={f.firstOrderOnly} onChange={set("firstOrderOnly")} />
-          <span>{t("admin.coupons.first_order")}</span>
-        </label>
-        <label className="fin-field" style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <input type="checkbox" checked={f.overrideFloor} onChange={set("overrideFloor")} />
-          <span>{t("admin.coupons.override_floor")}</span>
-        </label>
-        <label className="fin-field" style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <input type="checkbox" checked={f.active} onChange={set("active")} />
-          <span>{t("admin.products.active")}</span>
-        </label>
+        <div className="fin-field wide">
+          <span>{t("admin.coupons.products")} — {t("admin.coupons.all_hint")}</span>
+          <ProductPicker multi value={f.productIds} onChange={setV("productIds")} />
+        </div>
+        <div className="fin-field">
+          <span>{t("admin.coupons.countries")} — {t("admin.coupons.all_hint")}</span>
+          <CountrySelect multi value={f.countries} onChange={setV("countries")} />
+        </div>
+        <div className="fin-field">
+          <span>{t("admin.coupons.providers")} — {t("admin.coupons.all_hint")}</span>
+          <ProviderSelect multi value={f.providerIds} onChange={setV("providerIds")} />
+        </div>
+        <Check checked={f.showPublicly} onChange={setV("showPublicly")} label={t("admin.coupons.show_publicly")} hint={t("admin.coupons.show_publicly_hint")} />
+        <Check checked={f.vipOnly} onChange={setV("vipOnly")} label={t("admin.coupons.vip_only")} hint={t("admin.coupons.vip_only_hint")} />
+        <Check checked={f.firstOrderOnly} onChange={setV("firstOrderOnly")} label={t("admin.coupons.first_order")} />
+        <Check checked={f.overrideFloor} onChange={setV("overrideFloor")} label={t("admin.coupons.override_floor")} />
+        <Check checked={f.active} onChange={setV("active")} label={t("admin.products.active")} />
         <p className="fin-note" style={{ gridColumn: "1 / -1" }}>{t("admin.coupons.form_note")}</p>
         {err && <p className="fin-form-error" role="alert">{err}</p>}
         <div className="fin-form-actions">
@@ -277,7 +294,12 @@ export function CouponsTab() {
                   <tbody>
                     {data.items.map((c) => (
                       <tr key={c.id} style={c.active ? undefined : { opacity: 0.55 }}>
-                        <td className="mono">{c.code}{c.overrideFloor && <Badge tone="warning">{t("admin.coupons.below_floor_ok")}</Badge>}</td>
+                        <td className="mono">
+                          {c.code}
+                          {c.showPublicly && <Badge tone="primary">{t("admin.coupons.badge_public")}</Badge>}
+                          {c.vipOnly && <Badge tone="warning">{t("admin.coupons.badge_vip")}</Badge>}
+                          {c.overrideFloor && <Badge tone="warning">{t("admin.coupons.below_floor_ok")}</Badge>}
+                        </td>
                         <td><Num>{c.type === "Percent" ? `${c.value}%` : fmtEgp(c.value)}</Num></td>
                         <td>{scope(c)}</td>
                         <td>

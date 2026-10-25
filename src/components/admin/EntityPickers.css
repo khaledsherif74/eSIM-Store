@@ -1,0 +1,90 @@
+.ep-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+}
+.ep-box input,
+.ep-box select {
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  min-block-size: 38px;
+  max-inline-size: 100%;
+}
+.ep-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ep-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-inline-size: 100%;
+  padding: 4px 6px 4px 10px;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ep-chip > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ep-chip button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+.ep-results {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  z-index: 20;
+  margin: 4px 0 0;
+  padding: 4px;
+  list-style: none;
+  max-block-size: 280px;
+  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+}
+.ep-result {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  text-align: start;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+.ep-result:hover {
+  background: var(--color-primary-soft);
+}
+.ep-result small {
+  color: var(--color-text-muted);
+}
+.ep-empty {
+  padding: 10px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}

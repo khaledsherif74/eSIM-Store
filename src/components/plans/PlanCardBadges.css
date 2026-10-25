@@ -1,0 +1,51 @@
+.plan-card-flag {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.plan-card-flag.featured {
+  background: var(--color-warning-soft);
+  color: #8a5f16;
+}
+.plan-card-flag.bestseller {
+  background: var(--color-success-soft);
+  color: #0a7d6f;
+}
+.plan-card-offer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  font-size: 12px;
+  font-weight: 800;
+}
+.plan-card-coupon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+}
+.plan-card-price-old {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  text-decoration: line-through;
+  line-height: 1.1;
+}

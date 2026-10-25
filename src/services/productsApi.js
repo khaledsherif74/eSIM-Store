@@ -10,8 +10,19 @@ async function getAllProducts() {
 }
 
 async function searchProducts(params = {}) {
+  // Default landing view (no destination, no text search, cheapest sort):
+  // ask the server to put Europe eSIMs first.
+  const noDestination =
+    !(params.countries && params.countries.length) &&
+    !(params.regions && params.regions.length) &&
+    !params.q;
+  const effective =
+    noDestination && (params.sortBy || "price_asc") === "price_asc"
+      ? { ...params, europeFirst: "true" }
+      : params;
+
   const query = new URLSearchParams();
-  for (const [key, value] of Object.entries(params)) {
+  for (const [key, value] of Object.entries(effective)) {
     if (
       value === undefined ||
       value === null ||

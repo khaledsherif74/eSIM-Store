@@ -1,13 +1,34 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { BookOpen, CircleHelp, Smartphone, Activity } from "lucide-react";
+import {
+  BookOpen,
+  CircleHelp,
+  KeyRound,
+  Mail,
+  Smartphone,
+  Activity,
+} from "lucide-react";
 import { Card } from "../components/ui/Card.jsx";
 import { Button } from "../components/ui/Button.jsx";
-import { OrderLookupCard } from "../components/esim/OrderLookupCard.jsx";
+import { apiClient } from "../services/apiClient.js";
 import "./ContentPage.css";
 
 export function HelpPage() {
   const { t } = useTranslation();
+  const [supportEmail, setSupportEmail] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    apiClient
+      .get("/api/site-info")
+      .then((info) => alive && setSupportEmail(info?.supportEmail || ""))
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   return (
     <div className="container content-page">
       <header>
@@ -15,7 +36,24 @@ export function HelpPage() {
         <h1>{t("help.title")}</h1>
         <p>{t("help.subtitle")}</p>
       </header>
-      <OrderLookupCard title={t("help.lookup_title")} description={t("help.lookup_desc")} />
+
+      <Card className="help-reopen-card">
+        <KeyRound size={22} />
+        <div>
+          <h2>{t("help.reopen_title")}</h2>
+          <p>{t("help.reopen_desc")}</p>
+          {supportEmail ? (
+            <a href={`mailto:${supportEmail}`} className="help-reopen-cta">
+              <Button variant="secondary" icon={<Mail size={14} />}>
+                {t("help.reopen_contact", { email: supportEmail })}
+              </Button>
+            </a>
+          ) : (
+            <p className="help-reopen-fallback">{t("help.reopen_fallback")}</p>
+          )}
+        </div>
+      </Card>
+
       <div className="content-grid">
         <Card>
           <Activity size={24} />

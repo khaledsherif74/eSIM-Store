@@ -1,0 +1,149 @@
+{
+  "common": {
+    "loading": "Loading…"
+  },
+  "auth": {
+    "adblock_warning_title": "Ad blocker detected",
+    "adblock_warning_body": "Your browser or an extension is blocking ads and popups. Sign-in with Google or Apple may not work — if nothing opens when you click them, disable your ad blocker or use email signup below.",
+    "social_trouble_hint": "Social sign-in not working? Your ad blocker may be blocking the popup. Use email signup above, or disable the ad blocker and try again.",
+    "google_sdk_blocked": "Couldn't load Google sign-in. Check your connection or disable your ad blocker, then reload the page.",
+    "apple_sdk_unavailable": "Apple sign-in isn't available. Check your connection or disable your ad blocker, then reload the page.",
+    "apple_popup_blocked": "Apple sign-in was blocked by your browser. Disable your ad blocker or popup blocker and try again.",
+    "apple_error": "Couldn't complete Apple sign-in. Please try again."
+  },
+  "plan_card": {
+    "featured": "Featured",
+    "best_seller": "Best seller",
+    "days": "days",
+    "unlimited": "Unlimited",
+    "covered": "covered",
+    "view_offer": "View offer"
+  },
+  "plan_details": {
+    "coupon_available": "Use {{code}} at checkout for an extra {{discount}} off"
+  },
+  "profile": {
+    "set_password": "Set a password",
+    "set_password_sub": "You signed in with Google or Apple, so your account has no password yet. Choose one to also log in with your email.",
+    "password_set": "Password set successfully.",
+    "err_current_required": "Enter your current password",
+    "err_password_short": "New password must be at least 8 characters",
+    "err_password_long": "New password must be at most 72 characters",
+    "err_password_same": "New password must be different from the current one",
+    "err_password_mismatch": "New passwords don't match",
+    "err_generic": "Something went wrong — please try again.",
+    "err_name_required": "Name can't be empty",
+    "hide_password": "Hide passwords",
+    "show_password": "Show passwords",
+    "password_hint": "At least 8 characters.",
+    "password_changed": "Password changed successfully.",
+    "info_updated": "Profile updated.",
+    "personal_info_sub": "Update your name. Your email can't be changed.",
+    "personal_information_desc": "Update your name."
+  },
+  "checkout": {
+    "available_coupons": "Available coupons — tap to apply",
+    "coupon_vip": "VIP",
+    "coupon_off_percent": "{{value}}% off",
+    "coupon_off_fixed": "E£{{value}} off"
+  },
+  "help": {
+    "reopen_title": "Reopen your eSIM",
+    "reopen_desc": "Use the secure link in your order email to open your eSIM from any device or browser.",
+    "reopen_contact": "Email support at {{email}}",
+    "reopen_fallback": "Contact support with your order ID and we'll resend the email."
+  },
+  "admin": {
+    "pickers": {
+      "remove": "Remove",
+      "search_products": "Search a package by name or provider…",
+      "no_results": "No packages found",
+      "select_provider": "Choose a provider…",
+      "select_country": "Choose a country…"
+    },
+    "products": {
+      "tab_price_history": "Price history",
+      "price_history_title": "Price performance",
+      "price_history_sub": "See how many units each price point sold, and how much profit it made.",
+      "price_history_pick_product": "Pick a product above to see its price history.",
+      "price_history_group_by": "Group by",
+      "price_history_group_catalogue": "Catalogue price",
+      "price_history_group_paid": "Paid price",
+      "price_history_months": "Months",
+      "price_history_months_count": "Last {{count}} month(s)",
+      "price_history_price_usd": "Price (USD)",
+      "price_history_units": "Units sold",
+      "price_history_revenue": "Revenue (EGP)",
+      "price_history_discount": "Discounts (EGP)",
+      "price_history_profit": "Profit (EGP)",
+      "price_history_margin": "Margin",
+      "price_history_avg_profit": "{{amount}} / unit",
+      "price_history_last_sale": "Last sale",
+      "price_history_current_price": "Current price",
+      "price_history_cost": "Supplier cost",
+      "price_history_empty": "No completed orders for this product in the selected period.",
+      "price_history_note": "Prices are bucketed by the USD price the customer saw at checkout. Older orders without a saved fee or exchange rate have their cost estimated from the current settings. Switch to “Paid price” to see what customers actually paid after discounts.",
+      "n_packages": "packages"
+    },
+    "coupons": {
+      "show_publicly": "Show this coupon to customers on the checkout page",
+      "show_publicly_hint": "Customers see the code and can tap it. Leave off for secret codes you share yourself (email, social media).",
+      "vip_only": "VIP customers only",
+      "vip_only_hint": "Only customers whose total spend reached the VIP threshold (Users page) can use it — and see it, if shown publicly.",
+      "badge_public": "Public",
+      "badge_vip": "VIP only",
+      "form_note": "One coupon per order. Limits count orders whose payment did not fail, so failed or abandoned checkouts do not use up a coupon. Fixed amounts are in EGP. Leave packages, countries and providers empty to apply to everything.",
+      "offer_note": "Offers apply automatically: customers see the offer badge and the sale price on the plan cards, plan page and checkout, and a coupon can be added on top. Percent offers are limited to 99%."
+    },
+    "users": {
+      "segments_note": "VIP: total spend reaches the threshold. New: signed up in the last 30 days. Active: ordered in the last 90 days. Otherwise Inactive. What VIPs get: coupons marked “VIP customers only” (Coupons page) — only VIPs can use and see them."
+    },
+    "ops": {
+      "emails": "Email log",
+      "security": "Admins log",
+      "logs": "Audit log",
+      "settings": "Site settings",
+      "guest_access": "Guest access",
+      "guest_access_note": "If the order-access email failed to reach the customer, reveal the secure link or token here and share it with them, or resend the email.",
+      "reveal_access_token": "Reveal guest access link",
+      "reveal_confirm": "Reveal the guest access link for this order? Share it only with the customer who placed the order.",
+      "hide": "Hide",
+      "access_link": "Access link",
+      "access_token": "Access token",
+      "copy": "Copy",
+      "access_token_note": "Share this link or token only with the customer who placed the order.",
+      "access_link_unavailable": "Frontend URL is not configured (FRONTEND_BASE_URL) — the full access link cannot be built. Provide the access token to the customer directly.",
+      "resend_access_email": "Resend order email",
+      "resend_access_confirm": "Resend the order access email with the secure link to the customer?",
+      "access_email_sent": "Order access email sent.",
+      "resend_confirm_any": "Resend this email to the customer?",
+      "admin_alert_email": "Admin alert email",
+      "admin_alert_email_placeholder": "admin@your-domain.com",
+      "admin_alert_email_hint": "Receives alerts when the supplier balance drops below the threshold (set in Finance → Settings). Leave empty to fall back to the ADMIN_EMAIL secret, or to disable these alerts if that secret is not set.",
+      "mailtype_admin_low_balance": "Admin low balance alert"
+    },
+    "referrals": {
+      "tab_ledger": "Wallet ledger",
+      "tab_settings": "Reward rules",
+      "page_help": "A referral gives the inviting customer a reward in their wallet (USD balance) after the friend's first order.",
+      "help_referrals": "Every friend invited with a referral link. A suspicious one (same person, same network or same card) is held as “Flagged” until you approve or reject it.",
+      "help_ledger": "Every movement in customers' wallets: top-ups, purchases paid by wallet, referral rewards, expired or revoked rewards and manual adjustments. Use the form to add or remove balance by hand (a reason is required and logged).",
+      "help_settings": "Reward per referral, the minimum first order that earns a reward, the minimum order payable by wallet, and after how many days an unspent reward expires."
+    },
+    "package_details": {
+      "data": "Data",
+      "validity": "Validity",
+      "price": "Catalogue price",
+      "orders": "Orders in period",
+      "days": "days",
+      "countries": "{{count}} countries",
+      "product_id": "Product ID",
+      "inactive": "Inactive",
+      "click_hint": "Tap a package to see its details.",
+      "category_esim_realtime": "Instant eSIM",
+      "category_esim_delayed": "ID verification",
+      "category_esim_addon": "Top-up",
+      "category_esim_replacement": "Replacement"
+    }
+  }
+}

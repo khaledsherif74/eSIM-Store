@@ -18,6 +18,7 @@ export function ReferralsPage() {
     <div>
       <div className="admin-section-head">
         <h1>{t("admin.nav.referrals")}</h1>
+        <p>{t("admin.referrals.page_help")}</p>
       </div>
       <div className="ash-tabs" role="tablist">
         {TABS.map((x) => (
@@ -26,6 +27,9 @@ export function ReferralsPage() {
           </button>
         ))}
       </div>
+      <p className="fin-note" style={{ marginBlock: "0 12px" }}>
+        {t(`admin.referrals.help_${active.id}`)}
+      </p>
       {active.id === "referrals" && <ReferralsTab />}
       {active.id === "ledger" && <LedgerTab />}
       {active.id === "settings" && <ReferralSettingsTab />}

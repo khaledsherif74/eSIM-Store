@@ -1,3 +1,4 @@
+import "./PlanCardBadges.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -23,6 +24,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useCurrency } from "../../i18n/CurrencyContext.jsx";
+import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { Button } from "../ui/Button.jsx";
 import { Badge } from "../ui/Badge.jsx";
 import { Flag } from "../ui/Flag.jsx";
@@ -57,6 +59,7 @@ const InfoRow = ({ icon: Icon, label, value }) => {
 
 export function PlanDetailsContent({ plan, onBack }) {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const nav = useNavigate();
   const { format } = useCurrency();
 
@@ -66,6 +69,9 @@ export function PlanDetailsContent({ plan, onBack }) {
     plan.category === "esim_addon" || plan.category === "esim_replacement";
   const details = plan.description?.items || [];
   const caps = plan.capabilities || {};
+  const offer = plan.offer || null;
+  const coupon = plan.coupon || null;
+  const shownPrice = offer ? offer.salePrice : plan.price;
 
   const handleBack =
     onBack || (() => (window.history.length > 1 ? nav(-1) : nav("/")));
@@ -122,6 +128,14 @@ export function PlanDetailsContent({ plan, onBack }) {
         )}
         {caps.fiveG === "included" && <Badge tone="primary">5G</Badge>}
         {caps.unlimited && <Badge tone="success">Unlimited</Badge>}
+        {plan.featured && (
+          <Badge tone="warning">★ {t("plan_card.featured", "Featured")}</Badge>
+        )}
+        {plan.bestSeller && (
+          <Badge tone="success">
+            {t("plan_card.best_seller", "Best seller")}
+          </Badge>
+        )}
       </div>
 
       <h1 className="plan-details-title">{plan.title}</h1>
@@ -137,6 +151,12 @@ export function PlanDetailsContent({ plan, onBack }) {
             <strong>Attention</strong>
             <p>{plan.description.attention}</p>
           </div>
+        </div>
+      )}
+
+      {offer && (
+        <div className="plan-card-offer" style={{ marginBottom: 16 }}>
+          🔥 {offer.name} · −{offer.discountPercent}%
         </div>
       )}
 
@@ -171,17 +191,47 @@ export function PlanDetailsContent({ plan, onBack }) {
 
       <div className="plan-details-purchase-bar">
         <div className="plan-details-price-block">
+          {offer && (
+            <span className="plan-card-price-old">
+              ${Number(plan.price).toFixed(2)}
+            </span>
+          )}
           <div className="plan-details-price">
-            ${Number(plan.price).toFixed(2)} <small>{plan.currency}</small>
+            ${Number(shownPrice).toFixed(2)} <small>{plan.currency}</small>
           </div>
-          {format(plan.price) && (
+          {format(shownPrice) && (
             <div className="plan-details-price-approx">
-              {format(plan.price)}
+              {format(shownPrice)}
             </div>
           )}
           <div className="plan-details-purchase-note">
             <ShieldCheck size={13} /> {t("plan_details.secure_payment")}
           </div>
+          {coupon && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                alignSelf: "flex-start",
+                marginTop: 8,
+                padding: "4px 10px",
+                borderRadius: 8,
+                background: "var(--color-primary-soft)",
+                color: "var(--color-primary)",
+                fontSize: "var(--text-xs)",
+                fontWeight: 700,
+              }}
+            >
+              🎟{" "}
+              {t("plan_details.coupon_available", {
+                code: coupon.code,
+                discount: `${coupon.discountPercent}%`,
+                defaultValue:
+                  "Use {{code}} at checkout for an extra {{discount}} off",
+              })}
+            </div>
+          )}
         </div>
 
         {managementOnly ? (
@@ -302,7 +352,7 @@ export function PlanDetailsContent({ plan, onBack }) {
               <span>
                 <Flag code={c} size={20} />
               </span>
-              <strong>{countryName(c)}</strong>
+              <strong>{countryName(c, language)}</strong>
             </div>
           ))}
         </div>

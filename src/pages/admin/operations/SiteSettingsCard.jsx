@@ -4,13 +4,20 @@ import { AlertTriangle } from "lucide-react";
 import { Card } from "../../../components/ui/Card.jsx";
 import { Button } from "../../../components/ui/Button.jsx";
 import { adminApi } from "../../../services/adminApi.js";
-import { StateBox, errorText, useAsync } from "../../../components/admin/finance/financeUtils.jsx";
+import {
+  StateBox,
+  errorText,
+  useAsync,
+} from "../../../components/admin/finance/financeUtils.jsx";
 
 const POLICIES = ["policyTerms", "policyPrivacy", "policyRefund"];
 
 export function SiteSettingsCard() {
   const { t } = useTranslation();
-  const { data, loading, error, reload } = useAsync(() => adminApi.getSiteSettings(), []);
+  const { data, loading, error, reload } = useAsync(
+    () => adminApi.getSiteSettings(),
+    [],
+  );
   const [f, setF] = useState(null);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState({ type: "", text: "" });
@@ -20,7 +27,12 @@ export function SiteSettingsCard() {
   }, [data]);
 
   async function save() {
-    if (f.maintenanceMode && !data.maintenanceMode && !window.confirm(t("admin.ops.maintenance_confirm"))) return;
+    if (
+      f.maintenanceMode &&
+      !data.maintenanceMode &&
+      !window.confirm(t("admin.ops.maintenance_confirm"))
+    )
+      return;
     setSaving(true);
     setMsg({ type: "", text: "" });
     try {
@@ -43,18 +55,56 @@ export function SiteSettingsCard() {
           <div className="fin-form">
             <label className="fin-field">
               <span>{t("admin.ops.site_name")}</span>
-              <input value={f.siteName} maxLength={60} onChange={set("siteName")} />
+              <input
+                value={f.siteName}
+                maxLength={60}
+                onChange={set("siteName")}
+              />
             </label>
             <label className="fin-field">
               <span>{t("admin.ops.support_email")}</span>
-              <input type="email" dir="ltr" value={f.supportEmail} onChange={set("supportEmail")} />
+              <input
+                type="email"
+                dir="ltr"
+                value={f.supportEmail}
+                onChange={set("supportEmail")}
+              />
             </label>
-            <label className="fin-field" style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-              <input type="checkbox" checked={f.maintenanceMode} onChange={(e) => setF((x) => ({ ...x, maintenanceMode: e.target.checked }))} />
+            <label className="fin-field">
+              <span>{t("admin.ops.admin_alert_email")}</span>
+              <input
+                type="email"
+                dir="ltr"
+                value={f.adminAlertEmail ?? ""}
+                placeholder={t("admin.ops.admin_alert_email_placeholder")}
+                onChange={set("adminAlertEmail")}
+              />
+            </label>
+            <p
+              className="fin-note"
+              style={{ gridColumn: "1 / -1", marginTop: -8 }}
+            >
+              {t("admin.ops.admin_alert_email_hint")}
+            </p>
+            <label
+              className="fin-field"
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <input
+                type="checkbox"
+                checked={f.maintenanceMode}
+                onChange={(e) =>
+                  setF((x) => ({ ...x, maintenanceMode: e.target.checked }))
+                }
+              />
               <span>{t("admin.ops.maintenance")}</span>
             </label>
             {f.maintenanceMode && (
-              <div className="fin-alert danger" style={{ gridColumn: "1 / -1" }} role="note">
+              <div
+                className="fin-alert danger"
+                style={{ gridColumn: "1 / -1" }}
+                role="note"
+              >
                 <AlertTriangle size={16} />
                 {t("admin.ops.maintenance_warning")}
               </div>
@@ -62,13 +112,29 @@ export function SiteSettingsCard() {
             {POLICIES.map((k) => (
               <label className="fin-field wide" key={k}>
                 <span>{t(`admin.ops.${k}`)}</span>
-                <textarea rows={4} maxLength={20000} value={f[k]} onChange={set(k)} />
+                <textarea
+                  rows={4}
+                  maxLength={20000}
+                  value={f[k]}
+                  onChange={set(k)}
+                />
               </label>
             ))}
-            <p className="fin-note" style={{ gridColumn: "1 / -1" }}>{t("admin.ops.site_note")}</p>
-            {msg.text && <p className={msg.type === "err" ? "fin-form-error" : "fin-note"} role={msg.type === "err" ? "alert" : "status"}>{msg.text}</p>}
+            <p className="fin-note" style={{ gridColumn: "1 / -1" }}>
+              {t("admin.ops.site_note")}
+            </p>
+            {msg.text && (
+              <p
+                className={msg.type === "err" ? "fin-form-error" : "fin-note"}
+                role={msg.type === "err" ? "alert" : "status"}
+              >
+                {msg.text}
+              </p>
+            )}
             <div className="fin-form-actions">
-              <Button onClick={save} disabled={saving}>{t("admin.finance.save")}</Button>
+              <Button onClick={save} disabled={saving}>
+                {t("admin.finance.save")}
+              </Button>
             </div>
           </div>
         )}

@@ -162,20 +162,39 @@ export function Bars({ rows, format = fmtEgp }) {
   const max = Math.max(1, ...rows.map((r) => Math.abs(r.value)));
   return (
     <div className="fin-bars">
-      {rows.map((r) => (
-        <div className="fin-bar-row" key={r.key || r.label}>
-          <span className="fin-bar-label">{r.label}</span>
-          <span className="fin-bar-track">
-            <span
-              className={`fin-bar-fill${r.value < 0 ? " neg" : ""}${r.tone ? ` ${r.tone}` : ""}`}
-              style={{ inlineSize: `${(Math.abs(r.value) / max) * 100}%` }}
-            />
-          </span>
-          <span className="fin-bar-value">
-            <Num>{format(r.value)}</Num>
-          </span>
-        </div>
-      ))}
+      {rows.map((r) => {
+        const clickable = typeof r.onClick === "function";
+        return (
+          <div
+            className={`fin-bar-row${clickable ? " fin-bar-row--clickable" : ""}`}
+            key={r.key || r.label}
+            role={clickable ? "button" : undefined}
+            tabIndex={clickable ? 0 : undefined}
+            onClick={clickable ? r.onClick : undefined}
+            onKeyDown={
+              clickable
+                ? (e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      r.onClick();
+                    }
+                  }
+                : undefined
+            }
+          >
+            <span className="fin-bar-label">{r.label}</span>
+            <span className="fin-bar-track">
+              <span
+                className={`fin-bar-fill${r.value < 0 ? " neg" : ""}${r.tone ? ` ${r.tone}` : ""}`}
+                style={{ inlineSize: `${(Math.abs(r.value) / max) * 100}%` }}
+              />
+            </span>
+            <span className="fin-bar-value">
+              <Num>{format(r.value)}</Num>
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

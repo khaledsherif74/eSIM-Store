@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useAdminSession } from "../../components/admin/AdminSessionContext.jsx";
 import { TeamTab } from "../../components/admin/finance/TeamTab.jsx";
 import { OrdersPanel } from "./OrdersPanel.jsx";
-import { SettingsTab } from "./SettingsTab.jsx";
 import { SecretsTab } from "./SecretsTab.jsx";
 import { PaymentsTab } from "./operations/PaymentsTab.jsx";
 import { EmailsTab } from "./operations/EmailsTab.jsx";
@@ -35,6 +34,7 @@ export function OperationsPage() {
   );
   const active = tabs.find((x) => x.id === params.get("tab")) || tabs[0];
   const isAdmin = session.role === "Admin";
+  const canRevealToken = isAdmin || session.role === "Support";
 
   return (
     <div className="ash-ops">
@@ -58,7 +58,11 @@ export function OperationsPage() {
         </div>
       )}
       {active.id === "orders" && (
-        <OrdersPanel showFinance={isAdmin} canAct={isAdmin} />
+        <OrdersPanel
+          showFinance={isAdmin}
+          canAct={isAdmin}
+          canRevealToken={canRevealToken}
+        />
       )}
       {active.id === "payments" && <PaymentsTab />}
       {active.id === "emails" && <EmailsTab />}
@@ -67,7 +71,6 @@ export function OperationsPage() {
       {active.id === "settings" && (
         <div className="fin-wrap">
           <SiteSettingsCard />
-          <SettingsTab />
         </div>
       )}
       {active.id === "secrets" && <SecretsTab />}

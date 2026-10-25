@@ -4,15 +4,16 @@ import { Card } from "../../../components/ui/Card.jsx";
 import { Button } from "../../../components/ui/Button.jsx";
 import { Badge } from "../../../components/ui/Badge.jsx";
 import { adminApi } from "../../../services/adminApi.js";
+import { ProductPicker } from "../../../components/admin/EntityPickers.jsx";
 import { Empty, Num, StateBox, errorText, fmtEgp, useAsync } from "../../../components/admin/finance/financeUtils.jsx";
-import { cairoDate, fromList, toList } from "./couponUtils.js";
+import { cairoDate } from "./couponUtils.js";
 
-const blank = () => ({ name: "", discountType: "Percent", value: "10", productIds: "", startsAt: "", endsAt: "", active: true });
+const blank = () => ({ name: "", discountType: "Percent", value: "10", productIds: [], startsAt: "", endsAt: "", active: true });
 const fromOffer = (o) => ({
   name: o.name,
   discountType: o.discountType,
   value: String(o.value),
-  productIds: fromList(o.productIds),
+  productIds: o.productIds || [],
   startsAt: cairoDate(o.startsAt),
   endsAt: cairoDate(o.endsAt),
   active: o.active,
@@ -21,7 +22,7 @@ const toPayload = (f) => ({
   name: f.name,
   discountType: f.discountType,
   value: f.value === "" ? "" : Number(f.value),
-  productIds: toList(f.productIds),
+  productIds: f.productIds,
   startsAt: f.startsAt || null,
   endsAt: f.endsAt || null,
   active: f.active,
@@ -74,10 +75,10 @@ function OfferForm({ editing, onSaved, onCancel }) {
           <span>{t("admin.coupons.ends")}</span>
           <input type="date" value={f.endsAt} onChange={set("endsAt")} />
         </label>
-        <label className="fin-field">
-          <span>{t("admin.coupons.products")}</span>
-          <input dir="ltr" value={f.productIds} onChange={set("productIds")} placeholder={t("admin.coupons.offer_all_hint")} />
-        </label>
+        <div className="fin-field wide">
+          <span>{t("admin.coupons.products")} — {t("admin.coupons.offer_all_hint")}</span>
+          <ProductPicker multi value={f.productIds} onChange={(v) => setF((x) => ({ ...x, productIds: v }))} />
+        </div>
         <label className="fin-field" style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
           <input type="checkbox" checked={f.active} onChange={set("active")} />
           <span>{t("admin.products.active")}</span>

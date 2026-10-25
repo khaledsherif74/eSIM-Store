@@ -25,7 +25,21 @@ function Row({ label, children }) {
   );
 }
 
-export function OrderDrawer({ orderId, canAct, onClose, onChanged }) {
+function copyToClipboard(text) {
+  try {
+    navigator.clipboard?.writeText(String(text));
+  } catch {
+    /* ignore */
+  }
+}
+
+export function OrderDrawer({
+  orderId,
+  canAct = false,
+  canRevealToken = false,
+  onClose,
+  onChanged,
+}) {
   const { t } = useTranslation();
   const {
     data: o,
@@ -35,6 +49,7 @@ export function OrderDrawer({ orderId, canAct, onClose, onChanged }) {
   } = useAsync(() => adminApi.getOrder(orderId), [orderId]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState({ type: "", text: "" });
+  const [revealed, setRevealed] = useState(null);
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
@@ -51,6 +66,34 @@ export function OrderDrawer({ orderId, canAct, onClose, onChanged }) {
       setMsg({ type: "ok", text: t(okKey) });
       reload();
       onChanged?.();
+    } catch (e) {
+      setMsg({ type: "err", text: errorText(e, t) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function revealToken() {
+    if (!window.confirm(t("admin.ops.reveal_confirm"))) return;
+    setBusy(true);
+    setMsg({ type: "", text: "" });
+    try {
+      const result = await adminApi.revealOrderAccessToken(orderId);
+      setRevealed(result);
+    } catch (e) {
+      setMsg({ type: "err", text: errorText(e, t) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function resendOrderAccess() {
+    if (!window.confirm(t("admin.ops.resend_access_confirm"))) return;
+    setBusy(true);
+    setMsg({ type: "", text: "" });
+    try {
+      await adminApi.resendOrderAccessEmail(orderId);
+      setMsg({ type: "ok", text: t("admin.ops.access_email_sent") });
     } catch (e) {
       setMsg({ type: "err", text: errorText(e, t) });
     } finally {
@@ -127,6 +170,94 @@ export function OrderDrawer({ orderId, canAct, onClose, onChanged }) {
                 >
                   {msg.text}
                 </p>
+              )}
+
+              {canRevealToken && o.hasAccessToken && (
+                <section>
+                  <h3>{t("admin.ops.guest_access")}</h3>
+                  <p className="fin-note">{t("admin.ops.guest_access_note")}</p>
+                  <div className="fin-row-actions" style={{ marginTop: 8 }}>
+                    {revealed ? (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setRevealed(null)}
+                      >
+                        {t("admin.ops.hide")}
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        disabled={busy}
+                        onClick={revealToken}
+                      >
+                        {t("admin.ops.reveal_access_token")}
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      disabled={busy}
+                      onClick={resendOrderAccess}
+                    >
+                      {t("admin.ops.resend_access_email")}
+                    </Button>
+                  </div>
+                  {revealed && (
+                    <div className="fin-form" style={{ marginTop: 12 }}>
+                      {revealed.link && (
+                        <label className="fin-field wide">
+                          <span>{t("admin.ops.access_link")}</span>
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <input
+                              readOnly
+                              value={revealed.link}
+                              dir="ltr"
+                              style={{ flex: 1, minWidth: 0 }}
+                            />
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => copyToClipboard(revealed.link)}
+                            >
+                              {t("admin.ops.copy")}
+                            </Button>
+                          </div>
+                        </label>
+                      )}
+                      <label className="fin-field wide">
+                        <span>{t("admin.ops.access_token")}</span>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <input
+                            readOnly
+                            value={revealed.token}
+                            dir="ltr"
+                            style={{ flex: 1, minWidth: 0 }}
+                          />
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => copyToClipboard(revealed.token)}
+                          >
+                            {t("admin.ops.copy")}
+                          </Button>
+                        </div>
+                      </label>
+                      {!revealed.link && (
+                        <p
+                          className="fin-note"
+                          style={{ gridColumn: "1 / -1" }}
+                        >
+                          {t("admin.ops.access_link_unavailable")}
+                        </p>
+                      )}
+                      <p className="fin-note" style={{ gridColumn: "1 / -1" }}>
+                        {t("admin.ops.access_token_note")}
+                      </p>
+                    </div>
+                  )}
+                </section>
               )}
 
               <section>
