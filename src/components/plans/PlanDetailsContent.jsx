@@ -241,7 +241,7 @@ export function PlanDetailsContent({ plan, onBack }) {
         ) : (
           <Button
             size="lg"
-            style={{ display: none }}
+            style={{ display: "none" }}
             onClick={() => nav(`/checkout/${plan.productId}`)}
           >
             {t("plan_details.buy_button")}
