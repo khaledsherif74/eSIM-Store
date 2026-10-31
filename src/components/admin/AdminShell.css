@@ -193,6 +193,70 @@
   block-size: calc(100vh - 58px);
   overflow-y: auto;
 }
+
+.ash-collapse-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  width: 100%;
+  padding: 8px 12px 12px;
+  margin-bottom: 5px;
+  border: 0;
+  border-bottom: 1px solid var(--a-border);
+  background: transparent;
+  color: var(--a-muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ash-collapse-btn:hover {
+  color: var(--a-text);
+}
+.ash-nav-label {
+  min-width: 0;
+}
+.ash-collapsed .ash-body {
+  grid-template-columns: 76px minmax(0, 1fr);
+}
+.ash-collapsed .ash-side {
+  padding-inline: 8px;
+}
+.ash-collapsed .ash-collapse-btn {
+  justify-content: center;
+  padding-inline: 4px;
+}
+.ash-collapsed .ash-collapse-btn span,
+.ash-collapsed .ash-nav-label {
+  display: none;
+}
+.ash-collapsed .ash-nav-item {
+  justify-content: center;
+  padding-inline: 8px;
+}
+.ash-collapsed .ash-nav-sep {
+  margin-inline: 8px;
+}
+@media (max-width: 1000px) {
+  .ash-collapse-btn {
+    display: none;
+  }
+  .ash-collapsed .ash-body {
+    grid-template-columns: 1fr;
+  }
+  .ash-collapsed .ash-side {
+    padding: 16px 12px;
+  }
+  .ash-collapsed .ash-nav-label {
+    display: inline;
+  }
+  .ash-collapsed .ash-nav-item {
+    justify-content: flex-start;
+    padding: 11px 14px;
+  }
+}
+
 .ash-nav-item {
   display: flex;
   align-items: center;

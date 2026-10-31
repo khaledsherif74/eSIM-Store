@@ -13,6 +13,7 @@ export const ROLE_HOME = {
   Admin: "/admin",
   Accountant: "/finance",
   Support: "/admin/operations",
+  Operator: "/admin/products",
 };
 
 export function homeForRole(role) {

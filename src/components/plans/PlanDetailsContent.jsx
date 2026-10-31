@@ -239,11 +239,7 @@ export function PlanDetailsContent({ plan, onBack }) {
             {t("plan_details.unavailable_management_only")}
           </Button>
         ) : (
-          <Button
-            size="lg"
-            style={{ display: "none" }}
-            onClick={() => nav(`/checkout/${plan.productId}`)}
-          >
+          <Button size="lg" onClick={() => nav(`/checkout/${plan.productId}`)}>
             {t("plan_details.buy_button")}
           </Button>
         )}

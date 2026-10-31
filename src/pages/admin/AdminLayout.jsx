@@ -29,7 +29,7 @@ const ADMIN_NAV = [
     labelKey: "admin.nav.products",
     defaultLabel: "Products",
     icon: Package,
-    roles: ["Admin"],
+    roles: ["Admin", "Operator"],
   },
   {
     id: "coupons",
@@ -43,7 +43,7 @@ const ADMIN_NAV = [
     id: "users",
     to: "/admin/users",
     labelKey: "admin.nav.users",
-    defaultLabel: "Users",
+    defaultLabel: "Clients",
     icon: Users,
     roles: ["Admin"],
   },
@@ -53,7 +53,7 @@ const ADMIN_NAV = [
     labelKey: "admin.nav.referrals",
     defaultLabel: "Referrals",
     icon: Gift,
-    roles: ["Admin"],
+    roles: ["Admin", "Operator"],
   },
   {
     id: "operations",
@@ -92,11 +92,15 @@ export function AdminLayout() {
         mark: logo,
       }}
       navItems={navItems}
-      search={{
-        includeUsers: role === "Admin",
-        orderPath: "/admin/operations?tab=orders",
-        userPath: (id) => `/admin/users/${id}`,
-      }}
+      search={
+        role === "Operator"
+          ? null
+          : {
+              includeUsers: role === "Admin",
+              orderPath: "/admin/operations?tab=orders",
+              userPath: (id) => `/admin/users/${id}`,
+            }
+      }
     />
   );
 }

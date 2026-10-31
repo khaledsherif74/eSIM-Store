@@ -134,6 +134,8 @@ export const adminApi = {
     apiClient.put("/api/admin/referrals/settings", body),
   runRewardExpiry: () => apiClient.post("/api/admin/referrals/expire-run", {}),
   getLedger: (params) => apiClient.get(`/api/admin/ledger${qs(params)}`),
+  searchWalletCustomers: (q) =>
+    apiClient.get(`/api/admin/wallet/customers${qs({ q })}`),
   adjustWallet: (body) => apiClient.post("/api/admin/wallet/adjust", body),
 
   listCoupons: () => apiClient.get("/api/admin/coupons"),
@@ -152,19 +154,51 @@ export const adminApi = {
   listProducts: (params) => apiClient.get(`/api/admin/products${qs(params)}`),
   updateProduct: (id, body) =>
     apiClient.patch(`/api/admin/products/${encodeURIComponent(id)}`, body),
-  getProductPriceHistory: (productId, params) =>
+  getProductPriceHistory: (productId) =>
     apiClient.get(
-      `/api/admin/products/${encodeURIComponent(productId)}/price-history${qs(params)}`,
+      `/api/admin/products/${encodeURIComponent(productId)}/price-history`,
     ),
-  listPricingRules: () => apiClient.get("/api/admin/pricing/rules"),
-  createPricingRule: (body) => apiClient.post("/api/admin/pricing/rules", body),
-  updatePricingRule: (id, body) =>
-    apiClient.patch(`/api/admin/pricing/rules/${encodeURIComponent(id)}`, body),
-  previewPricing: (body) => apiClient.post("/api/admin/pricing/preview", body),
-  getPricingSettings: () => apiClient.get("/api/admin/pricing/settings"),
-  updatePricingSettings: (body) =>
-    apiClient.put("/api/admin/pricing/settings", body),
-  recomputePrices: () => apiClient.post("/api/admin/pricing/recompute", {}),
+  previewProductPriceUpdate: (body) =>
+    apiClient.post("/api/admin/pricing/preview", body),
+  applyProductPriceChanges: (body) =>
+    apiClient.post("/api/admin/pricing/apply", body),
+  previewProductPricingExcel: async (file) => {
+    const form = new FormData();
+    form.append("file", file);
+    const res = await fetch(`${BASE_URL}/api/admin/pricing/import/preview`, {
+      method: "POST",
+      credentials: "include",
+      body: form,
+    });
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      throw new ApiError(data?.error || `Request failed (${res.status})`, {
+        status: res.status,
+        body: data,
+      });
+    }
+    return data;
+  },
+  downloadProductPricingExcel: async () => {
+    const res = await fetch(`${BASE_URL}/api/admin/products/export.xlsx`, {
+      credentials: "include",
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      throw new ApiError(body?.error || `Request failed (${res.status})`, {
+        status: res.status,
+        body,
+      });
+    }
+    const url = URL.createObjectURL(await res.blob());
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "esim-products-pricing.xlsx";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  },
   listCostChanges: (params) =>
     apiClient.get(`/api/admin/pricing/changes${qs(params)}`),
 

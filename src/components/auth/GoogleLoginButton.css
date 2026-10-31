@@ -1,39 +1,92 @@
-.social-google-wrap {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  flex-shrink: 0;
+.google-btn-root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }
 
-.social-google-visual {
-  position: absolute;
-  inset: 0;
-  display: flex;
+.google-btn-root .social-google-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid #dadce0;
-  transition: background-color 0.2s ease;
-  pointer-events: none;
-}
-
-.social-google-wrap:hover .social-google-visual {
-  background: #f8f9fa;
-}
-
-.social-google-wrap .social-google-slot {
-  position: absolute;
-  inset: 0;
+  flex: 0 0 44px;
   width: 44px;
   height: 44px;
-  opacity: 0;
+  box-sizing: border-box;
   overflow: hidden;
+  padding: 0;
+  border: 1px solid #dadce0;
   border-radius: 50%;
-  cursor: pointer;
+  background: #fff;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.social-google-wrap .social-google-slot iframe {
-  border-radius: 0 !important;
-  transform: scale(1.12);
+.google-btn-root .social-google-button:hover {
+  background: #f8f9fa;
+  border-color: #c8cdd3;
+}
+
+.google-btn-root .social-google-button > .social-google-logo {
+  position: relative !important;
+  z-index: 3 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  flex: 0 0 20px !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+.google-btn-root .social-google-logo .google-logo-red {
+  fill: #ea4335 !important;
+}
+.google-btn-root .social-google-logo .google-logo-blue {
+  fill: #4285f4 !important;
+}
+.google-btn-root .social-google-logo .google-logo-yellow {
+  fill: #fbbc05 !important;
+}
+.google-btn-root .social-google-logo .google-logo-green {
+  fill: #34a853 !important;
+}
+.google-btn-root .social-google-slot {
+  position: absolute !important;
+  z-index: 2 !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  pointer-events: auto !important;
+}
+
+.google-btn-root .social-google-slot > div,
+.google-btn-root .social-google-slot iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.google-btn-hint {
+  max-width: 240px;
+  margin: 0;
 }

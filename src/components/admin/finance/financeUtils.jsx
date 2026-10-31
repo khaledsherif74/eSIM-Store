@@ -15,7 +15,7 @@ export const CATEGORIES = [
 export const KINDS = ["Fixed", "Once", "Variable"];
 export const CYCLES = ["Monthly", "Quarterly", "Yearly"];
 export const STATUSES = ["Confirmed", "Draft", "Cancelled"];
-export const ROLES = ["Admin", "Accountant", "Support"];
+export const ROLES = ["Admin", "Accountant", "Support", "Operator"];
 
 const CAIRO = "Africa/Cairo";
 

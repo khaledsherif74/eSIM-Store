@@ -47,6 +47,7 @@ import { ResetPasswordPage } from "./pages/auth/ResetPasswordPage.jsx";
 import { LanguageProvider } from "./i18n/LanguageContext.jsx";
 import { CurrencyProvider } from "./i18n/CurrencyContext.jsx";
 import { AuthProvider } from "./hooks/useAuth.jsx";
+import { SiteInfoProvider } from "./hooks/useSiteInfo.jsx";
 
 function ShellRoutes() {
   return (
@@ -87,7 +88,7 @@ function ShellRoutes() {
       <Route
         path="/admin"
         element={
-          <RequireAdminSession allow={["Admin", "Support"]}>
+          <RequireAdminSession allow={["Admin", "Support", "Operator"]}>
             <AdminLayout />
           </RequireAdminSession>
         }
@@ -103,7 +104,7 @@ function ShellRoutes() {
         <Route
           path="products"
           element={
-            <RoleGate allow={["Admin"]}>
+            <RoleGate allow={["Admin", "Operator"]}>
               <ProductsPage />
             </RoleGate>
           }
@@ -135,12 +136,19 @@ function ShellRoutes() {
         <Route
           path="referrals"
           element={
-            <RoleGate allow={["Admin"]}>
+            <RoleGate allow={["Admin", "Operator"]}>
               <ReferralsPage />
             </RoleGate>
           }
         />
-        <Route path="operations" element={<OperationsPage />} />
+        <Route
+          path="operations"
+          element={
+            <RoleGate allow={["Admin", "Support"]}>
+              <OperationsPage />
+            </RoleGate>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
 
@@ -192,7 +200,9 @@ export function App() {
       <CurrencyProvider>
         <AuthProvider>
           <BrowserRouter future={{ v7_startTransition: true }}>
-            <AppShell />
+            <SiteInfoProvider>
+              <AppShell />
+            </SiteInfoProvider>
           </BrowserRouter>
         </AuthProvider>
       </CurrencyProvider>

@@ -3,6 +3,7 @@ import { ShieldCheck, Smartphone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../i18n/LanguageContext.jsx";
 import { LANGUAGES } from "../../i18n/languages.js";
+import logo from "../../public/images/favicon.svg";
 import "./Footer.css";
 
 export function Footer() {
@@ -13,7 +14,7 @@ export function Footer() {
     <footer className="footer">
       <div className="container footer-grid">
         <div className="footer-brand">
-          <span className="footer-brand-mark">e</span>
+          <img src={logo} alt="Turismo logo" className="footer-brand-logo" />
           <div>
             <strong>eSIM Store</strong>
             <span>{t("footer.tagline")}</span>

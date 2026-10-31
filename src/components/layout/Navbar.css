@@ -15,6 +15,7 @@
 }
 
 .navbar-brand {
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -39,6 +40,10 @@
     var(--color-success)
   );
   background-clip: text;
+  max-width: clamp(120px, 30vw, 360px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .navbar-title span {

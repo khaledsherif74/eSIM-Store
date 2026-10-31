@@ -104,11 +104,19 @@ export function TeamTab({ currentUsername }) {
             <select value={form.role} onChange={set("role")}>
               {ROLES.map((r) => (
                 <option key={r} value={r}>
-                  {t(`admin.finance.role_${r}`)}
+                  {t(`admin.finance.role_${r}`, r)}
                 </option>
               ))}
             </select>
           </label>
+          {form.role === "Operator" && (
+            <p className="fin-note" style={{ gridColumn: "1 / -1" }}>
+              {t(
+                "admin.finance.team_operator_permissions",
+                "Operator can access Products & Pricing and Referrals & Points only.",
+              )}
+            </p>
+          )}
           <label className="fin-field">
             <span>{t("admin.finance.team_email")}</span>
             <input
@@ -177,7 +185,7 @@ export function TeamTab({ currentUsername }) {
                           >
                             {ROLES.map((r) => (
                               <option key={r} value={r}>
-                                {t(`admin.finance.role_${r}`)}
+                                {t(`admin.finance.role_${r}`, r)}
                               </option>
                             ))}
                           </select>

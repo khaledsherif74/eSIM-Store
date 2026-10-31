@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Link, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../hooks/useAuth.jsx";
+import { useSiteInfo } from "../../hooks/useSiteInfo.jsx";
 import "./Navbar.css";
 import logo from "../../public/images/logo.png";
 
@@ -9,6 +10,7 @@ export function Navbar() {
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { siteName } = useSiteInfo();
 
   async function handleLogout() {
     await logout();
@@ -18,9 +20,11 @@ export function Navbar() {
   return (
     <header className="navbar">
       <div className="container navbar-inner">
-        <Link to="/" className="navbar-brand">
-          <img src={logo} className="navbar-mark"></img>
-          <span className="navbar-title">eSIM</span>
+        <Link to="/" className="navbar-brand" aria-label={siteName}>
+          <img src={logo} className="navbar-mark" alt="" aria-hidden="true" />
+          <span className="navbar-title" title={siteName}>
+            {siteName}
+          </span>
         </Link>
         <nav className="navbar-links">
           <NavLink

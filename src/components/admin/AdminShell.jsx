@@ -5,6 +5,8 @@ import {
   Languages,
   LogOut,
   Menu,
+  ChevronLeft,
+  ChevronRight,
   Package,
   Search,
   Users,
@@ -25,6 +27,15 @@ function GlobalSearch({ config }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.localStorage.getItem("adminSidebarCollapsed") === "true",
+  );
+
+  useEffect(() => {
+    window.localStorage.setItem("adminSidebarCollapsed", String(collapsed));
+  }, [collapsed]);
   const [index, setIndex] = useState({ orders: [], users: [] });
   const [loading, setLoading] = useState(false);
   const wrapRef = useRef(null);
@@ -158,7 +169,7 @@ function GlobalSearch({ config }) {
           {results.users.length > 0 && (
             <div>
               <span className="ash-dd-label">
-                {t("admin.nav.users", "Users")}
+                {t("admin.nav.users", "Clients")}
               </span>
               {results.users.map((u) => (
                 <button
@@ -193,6 +204,15 @@ export function AdminShell({ brand, navItems, search, extra }) {
   const navigate = useNavigate();
   const session = useAdminSession();
   const [open, setOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.localStorage.getItem("adminSidebarCollapsed") === "true",
+  );
+
+  useEffect(() => {
+    window.localStorage.setItem("adminSidebarCollapsed", String(collapsed));
+  }, [collapsed]);
 
   async function onLogout() {
     try {
@@ -203,7 +223,7 @@ export function AdminShell({ brand, navItems, search, extra }) {
   }
 
   return (
-    <div className="ash">
+    <div className={`ash${collapsed ? " ash-collapsed" : ""}`}>
       <header className="ash-top">
         <button
           type="button"
@@ -269,6 +289,28 @@ export function AdminShell({ brand, navItems, search, extra }) {
 
       <div className="ash-body">
         <aside className={`ash-side${open ? " open" : ""}`}>
+          <button
+            type="button"
+            className="ash-collapse-btn"
+            onClick={() => setCollapsed((value) => !value)}
+            aria-label={
+              collapsed
+                ? t("admin.expand_sidebar", "Expand sidebar")
+                : t("admin.collapse_sidebar", "Collapse sidebar")
+            }
+            title={
+              collapsed
+                ? t("admin.expand_sidebar", "Expand sidebar")
+                : t("admin.collapse_sidebar", "Collapse sidebar")
+            }
+          >
+            {collapsed ? <ChevronRight size={19} /> : <ChevronLeft size={19} />}
+            <span>
+              {collapsed
+                ? t("admin.expand_sidebar", "Expand")
+                : t("admin.collapse_sidebar", "Collapse")}
+            </span>
+          </button>
           {navItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -281,9 +323,14 @@ export function AdminShell({ brand, navItems, search, extra }) {
                     `ash-nav-item${isActive ? " active" : ""}`
                   }
                   onClick={() => setOpen(false)}
+                  title={
+                    collapsed ? t(item.labelKey, item.defaultLabel) : undefined
+                  }
                 >
                   <Icon size={19} />
-                  <span>{t(item.labelKey, item.defaultLabel)}</span>
+                  <span className="ash-nav-label">
+                    {t(item.labelKey, item.defaultLabel)}
+                  </span>
                 </NavLink>
               </span>
             );
