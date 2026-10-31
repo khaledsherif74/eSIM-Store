@@ -5,85 +5,22 @@
   gap: 8px;
 }
 
-.google-btn-root .social-google-button {
-  position: relative;
-  isolation: isolate;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 44px;
+.google-btn-wrap {
   width: 44px;
   height: 44px;
-  box-sizing: border-box;
-  overflow: hidden;
-  padding: 0;
-  border: 1px solid #dadce0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  background: #fff;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
-.google-btn-root .social-google-button:hover {
-  background: #f8f9fa;
-  border-color: #c8cdd3;
-}
-
-.google-btn-root .social-google-button > .social-google-logo {
-  position: relative !important;
-  z-index: 3 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  width: 20px !important;
-  height: 20px !important;
-  min-width: 20px !important;
-  min-height: 20px !important;
-  flex: 0 0 20px !important;
-  overflow: visible !important;
-  pointer-events: none !important;
-}
-
-.google-btn-root .social-google-logo .google-logo-red {
-  fill: #ea4335 !important;
-}
-.google-btn-root .social-google-logo .google-logo-blue {
-  fill: #4285f4 !important;
-}
-.google-btn-root .social-google-logo .google-logo-yellow {
-  fill: #fbbc05 !important;
-}
-.google-btn-root .social-google-logo .google-logo-green {
-  fill: #34a853 !important;
-}
-.google-btn-root .social-google-slot {
-  position: absolute !important;
-  z-index: 2 !important;
-  inset: 0 !important;
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  overflow: hidden !important;
-  opacity: 0 !important;
-  background: transparent !important;
-  pointer-events: auto !important;
-}
-
-.google-btn-root .social-google-slot > div,
-.google-btn-root .social-google-slot iframe {
-  position: absolute !important;
-  inset: 0 !important;
-  display: block !important;
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 100% !important;
-  min-height: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-  background: transparent !important;
+.google-btn-slot {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .google-btn-hint {
